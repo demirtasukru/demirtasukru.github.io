@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Şükrü Demirtaş</title>
+<meta name="description" content="Şükrü Demirtaş — Computational economics, agent-based modeling, and financial market simulation. Yıldız Technical University.">
+
+<!-- Open Graph / social sharing. Replace the URL and image with your live site values. -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Şükrü Demirtaş">
+<meta property="og:description" content="Computational economics, agent-based modeling, and financial market simulation.">
+<meta property="og:url" content="https://kullaniciadi.github.io/">
+<meta property="og:image" content="https://kullaniciadi.github.io/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Şükrü Demirtaş">
+<meta name="twitter:description" content="Computational economics, agent-based modeling, and financial market simulation.">
+<meta name="twitter:image" content="https://kullaniciadi.github.io/og-image.png">
+<meta name="theme-color" content="#16243f">
+
+<!-- Favicon: inline ŞD monogram, no extra file needed -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2316243f'/%3E%3Ctext x='50%25' y='52%25' font-family='Georgia,serif' font-size='30' font-weight='bold' fill='%23c0892c' text-anchor='middle' dominant-baseline='middle'%3E%C5%9ED%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+  :root{
+    --ink:#16243f;
+    --ink-soft:#3a4a66;
+    --paper:#f6f2e9;
+    --paper-2:#efe9da;
+    --card:#fbf9f3;
+    --gold:#c0892c;
+    --gold-deep:#9a6c1e;
+    --line:#d9d0bc;
+    --maxw:1080px;
+    --header-bg:rgba(246,242,233,.82);
+  }
+  body.dark{
+    --ink:#ece6d8;
+    --ink-soft:#aaa392;
+    --paper:#14171d;
+    --paper-2:#1d212a;
+    --card:#1b1f27;
+    --gold:#d9a847;
+    --gold-deep:#e3b65f;
+    --line:#333a45;
+    --header-bg:rgba(20,23,29,.85);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Spectral',Georgia,serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.65;
+    font-size:18px;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    transition:background .3s,color .3s;
+  }
+  /* dotted node-grid backdrop */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:radial-gradient(var(--line) 1px, transparent 1.4px);
+    background-size:30px 30px;
+    opacity:.5;
+    z-index:0;
+    pointer-events:none;
+  }
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:radial-gradient(circle at 80% -10%, rgba(192,137,44,.10), transparent 45%);
+    z-index:0;
+    pointer-events:none;
+  }
+  a{color:inherit}
+
+  /* ---- NAV ---- */
+  header{
+    position:sticky;top:0;z-index:20;
+    backdrop-filter:blur(8px);
+    background:var(--header-bg);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    max-width:var(--maxw);margin:0 auto;
+    display:flex;align-items:center;gap:28px;
+    padding:16px 28px;
+  }
+  .brand{
+    font-family:'Fraunces',serif;
+    font-weight:600;font-size:21px;letter-spacing:.2px;
+    margin-right:auto;text-decoration:none;
+    white-space:nowrap;
+  }
+  .brand span{color:var(--gold-deep)}
+  .navlinks{display:flex;gap:22px;align-items:center}
+  .navlinks a{
+    text-decoration:none;font-size:15.5px;letter-spacing:.3px;
+    color:var(--ink-soft);position:relative;padding:4px 0;
+    transition:color .2s;
+  }
+  .navlinks a::after{
+    content:"";position:absolute;left:0;bottom:-2px;height:2px;width:0;
+    background:var(--gold);transition:width .25s ease;
+  }
+  .navlinks a:hover,.navlinks a.active{color:var(--ink)}
+  .navlinks a.active::after,.navlinks a:hover::after{width:100%}
+  .lang{
+    border:1px solid var(--line);border-radius:999px;
+    display:flex;overflow:hidden;font-size:13px;font-family:'Spectral'
+  }
+  .lang button{
+    background:transparent;border:0;cursor:pointer;
+    padding:6px 12px;color:var(--ink-soft);font-family:inherit;font-size:13px;
+    letter-spacing:.5px;transition:.2s;
+  }
+  .lang button.on{background:var(--ink);color:var(--paper)}
+  .themebtn{
+    border:1px solid var(--line);background:transparent;cursor:pointer;
+    width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    color:var(--ink-soft);transition:.2s;padding:0
+  }
+  .themebtn:hover{color:var(--gold-deep);border-color:var(--gold)}
+  .themebtn .moon{display:none}
+  body.dark .themebtn .sun{display:none}
+  body.dark .themebtn .moon{display:block}
+  .citebtn{
+    font-family:'Spectral',serif;font-size:12.5px;letter-spacing:.4px;cursor:pointer;
+    border:1px solid var(--line);border-radius:3px;padding:3px 9px;color:var(--ink-soft);
+    background:var(--paper);transition:.2s
+  }
+  .citebtn:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .bibsrc{display:none}
+
+  /* ---- LAYOUT ---- */
+  main{max-width:var(--maxw);margin:0 auto;padding:0 28px;position:relative;z-index:1}
+  .page{display:none;animation:rise .5s ease both}
+  .page.show{display:block}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  section{padding:64px 0}
+  .eyebrow{
+    font-family:'Spectral';font-size:13px;letter-spacing:3px;text-transform:uppercase;
+    color:var(--gold-deep);margin-bottom:14px;
+  }
+  h1{font-family:'Fraunces',serif;font-weight:600;line-height:1.05;font-size:clamp(38px,6vw,68px);letter-spacing:-.5px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(26px,4vw,38px);letter-spacing:-.3px;margin-bottom:8px}
+  h3{font-family:'Fraunces',serif;font-weight:500;font-size:21px;margin-bottom:6px}
+  p{margin-bottom:16px;color:var(--ink-soft)}
+  p.lead{font-size:21px;color:var(--ink);max-width:60ch}
+
+  /* ---- HERO ---- */
+  .hero{display:grid;grid-template-columns:1.4fr .9fr;gap:48px;align-items:center;padding-top:76px}
+  .hero .role{font-size:17px;color:var(--ink-soft);margin-top:18px;max-width:48ch}
+  .pill{
+    display:inline-block;font-size:13px;letter-spacing:.5px;
+    border:1px solid var(--line);border-radius:999px;padding:5px 14px;
+    margin:6px 6px 0 0;color:var(--ink-soft);background:var(--card)
+  }
+  .portrait{
+    position:relative;aspect-ratio:4/5;border-radius:6px;overflow:hidden;
+    border:1px solid var(--line);
+    background:
+      linear-gradient(135deg,var(--paper-2),var(--card));
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 24px 60px -30px rgba(22,36,63,.5);
+  }
+  .portrait img{width:100%;height:100%;object-fit:cover;display:block}
+  .portrait .ph{
+    text-align:center;color:var(--ink-soft);padding:24px;font-size:14px;line-height:1.5
+  }
+  .portrait .ph b{display:block;font-family:'Fraunces';font-size:46px;color:var(--ink);opacity:.25;margin-bottom:8px}
+
+  .actions{margin-top:26px;display:flex;gap:14px;flex-wrap:wrap}
+  .btn{
+    text-decoration:none;font-size:15px;letter-spacing:.3px;
+    padding:11px 20px;border-radius:4px;transition:.2s;display:inline-block
+  }
+  .btn.solid{background:var(--ink);color:var(--paper)}
+  .btn.solid:hover{background:#0f1a30}
+  .btn.ghost{border:1px solid var(--ink-soft);color:var(--ink)}
+  .btn.ghost:hover{background:var(--ink);color:var(--paper)}
+
+  .social{display:flex;gap:18px;margin-top:26px;flex-wrap:wrap}
+  .social a{font-size:14.5px;color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:2px;transition:.2s}
+  .social a:hover{color:var(--gold-deep);border-color:var(--gold)}
+
+  /* ---- CARDS / GRID ---- */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:6px;
+    padding:26px 28px;transition:.25s;
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:0 18px 40px -28px rgba(22,36,63,.55);border-color:var(--gold)}
+  .card p{margin-bottom:0;font-size:16px}
+
+  .interests{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+
+  /* publications */
+  .pub{
+    display:flex;gap:20px;padding:20px 0;border-bottom:1px solid var(--line);
+  }
+  .pub .yr{
+    font-family:'Fraunces';font-weight:600;font-size:18px;color:var(--gold-deep);
+    min-width:64px;flex-shrink:0;padding-top:2px
+  }
+  .pub .body{flex:1}
+  .pub .ttl{color:var(--ink);font-size:17.5px;font-weight:500;display:block;margin-bottom:4px}
+  .pub .meta{font-size:14.5px;color:var(--ink-soft);font-style:italic}
+  .pub .tag{
+    display:inline-block;font-style:normal;font-size:11.5px;letter-spacing:.5px;
+    text-transform:uppercase;border:1px solid var(--line);border-radius:3px;
+    padding:2px 7px;margin-left:6px;color:var(--gold-deep);vertical-align:middle
+  }
+
+  /* courses (accordion) */
+  details.course{
+    background:var(--card);border:1px solid var(--line);border-left:3px solid var(--gold);
+    border-radius:5px;margin-bottom:14px;transition:border-color .2s;overflow:hidden
+  }
+  details.course[open]{border-left-width:6px}
+  details.course summary{
+    list-style:none;cursor:pointer;padding:22px 26px;
+    display:flex;align-items:center;gap:18px;transition:background .2s
+  }
+  details.course summary::-webkit-details-marker{display:none}
+  details.course summary:hover{background:var(--paper-2)}
+  .course .head{flex:1;min-width:0}
+  .course .code{font-family:'Fraunces';font-weight:600;color:var(--gold-deep);font-size:14px;letter-spacing:1px}
+  .course h3{margin:3px 0 3px;font-size:20px}
+  .course .inst{font-size:14px;color:var(--ink-soft);font-style:italic}
+  .course .chev{
+    flex-shrink:0;width:13px;height:13px;border-right:2px solid var(--gold-deep);
+    border-bottom:2px solid var(--gold-deep);transform:rotate(45deg);
+    transition:transform .25s ease;margin-top:-6px
+  }
+  details.course[open] .chev{transform:rotate(-135deg);margin-top:4px}
+  .course .matwrap{padding:0 26px 22px}
+  .course .matwrap .materials{margin-top:0}
+
+  /* contact */
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px}
+  .contact-grid a{color:var(--ink);text-decoration:none}
+  .ckey{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-deep);margin-bottom:6px}
+
+  footer{
+    border-top:1px solid var(--line);margin-top:40px;
+    padding:30px 28px;text-align:center;font-size:13.5px;color:var(--ink-soft);
+    position:relative;z-index:1
+  }
+
+  .editnote{
+    max-width:var(--maxw);margin:0 auto;padding:14px 28px;
+    font-size:13px;color:var(--gold-deep);position:relative;z-index:1
+  }
+
+  /* publication resource links */
+  .pub .links{margin-top:7px;display:flex;flex-wrap:wrap;gap:8px}
+  .pub .links a{
+    font-style:normal;font-size:12.5px;letter-spacing:.4px;text-decoration:none;
+    border:1px solid var(--line);border-radius:3px;padding:3px 9px;color:var(--ink-soft);
+    background:var(--paper);transition:.2s
+  }
+  .pub .links a:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+  /* course materials */
+  .materials{list-style:none;margin-top:14px;border-top:1px dashed var(--line);padding-top:12px}
+  .materials li{
+    display:flex;align-items:baseline;gap:10px;padding:6px 0;
+    border-bottom:1px dashed var(--line)
+  }
+  .materials li:last-child{border-bottom:0}
+  .materials .wk{
+    font-family:'Fraunces';font-weight:600;font-size:12.5px;color:var(--gold-deep);
+    letter-spacing:.5px;min-width:60px;flex-shrink:0
+  }
+  .materials a{
+    text-decoration:none;color:var(--ink);font-size:15.5px;border-bottom:1px solid var(--line);
+    padding-bottom:1px;transition:.2s
+  }
+  .materials a:hover{color:var(--gold-deep);border-color:var(--gold)}
+  .matnote{font-size:13px;color:var(--ink-soft);font-style:italic;margin-top:12px}
+
+  /* CV button gets the gold accent */
+  .btn.cv{background:var(--gold);color:#fff;border:1px solid var(--gold)}
+  .btn.cv:hover{background:var(--gold-deep);border-color:var(--gold-deep)}
+
+  /* rated lists (cigars, books) */
+  .ratehead{display:flex;align-items:baseline;gap:12px;margin:38px 0 4px}
+  .ratehead h3{font-size:24px}
+  .ratehead .count{font-size:13px;color:var(--ink-soft);font-style:italic}
+  .yeartag{
+    font-family:'Fraunces';font-weight:600;font-size:14px;color:var(--gold-deep);
+    letter-spacing:1px;margin:22px 0 6px;border-bottom:1px solid var(--line);padding-bottom:4px
+  }
+  .rateitem{
+    display:flex;align-items:center;gap:18px;padding:14px 0;border-bottom:1px solid var(--line)
+  }
+  .ri-main{flex:1;min-width:0}
+  .ri-title{display:block;font-size:17px;color:var(--ink);font-weight:500}
+  .ri-meta{font-size:13.5px;color:var(--ink-soft);font-style:italic}
+  .ri-note{display:block;font-size:14px;color:var(--ink-soft);margin-top:3px}
+  .score{flex-shrink:0;width:128px;text-align:right}
+  .score-num{font-family:'Fraunces';font-weight:600;font-size:20px;color:var(--ink)}
+  .score-num small{font-size:12px;color:var(--ink-soft);font-weight:400}
+  .bar{display:block;height:6px;border-radius:3px;background:var(--paper-2);margin-top:6px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--gold);border-radius:3px}
+  .bar.hi i{background:var(--gold)}
+  .bar.mid i{background:#b7913f}
+  .bar.lo i{background:#a9a18c}
+
+  /* personal sub-tabs */
+  .perstabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin:28px 0 8px}
+  .perstab{
+    background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:26px 24px;cursor:pointer;text-align:left;font-family:inherit;
+    transition:.2s;display:flex;align-items:center;gap:16px
+  }
+  .perstab:hover{transform:translateY(-3px);box-shadow:0 18px 40px -28px rgba(22,36,63,.55);border-color:var(--gold)}
+  .perstab.active{border-color:var(--gold);border-left:4px solid var(--gold);background:var(--paper-2)}
+  .perstab .ic{
+    width:42px;height:42px;flex-shrink:0;border-radius:50%;background:var(--paper-2);
+    display:flex;align-items:center;justify-content:center;font-size:22px
+  }
+  .perstab.active .ic{background:var(--gold);color:#fff}
+  .perstab .pt{font-family:'Fraunces';font-weight:600;font-size:20px;color:var(--ink);display:block}
+  .perstab .ps{font-size:13.5px;color:var(--ink-soft)}
+  .perspanel{display:none;animation:rise .4s ease both}
+  .perspanel.show{display:block}
+  .cigarmap,.travelmap{
+    height:380px;width:100%;border:1px solid var(--line);border-radius:8px;
+    margin:18px 0 6px;z-index:0
+  }
+  .leaflet-popup-content{font-family:'Spectral',serif}
+  .mapnote{font-size:13px;color:var(--ink-soft);font-style:italic;margin-bottom:8px}
+
+  /* hide elements of the non-active language */
+  [data-tr]{display:none}
+  body.tr [data-en]{display:none}
+  body.tr [data-tr]{display:revert}
+
+  @media(max-width:760px){
+    body{font-size:17px}
+    .hero{grid-template-columns:1fr;padding-top:44px}
+    .portrait{max-width:280px;order:-1}
+    .grid2,.contact-grid{grid-template-columns:1fr}
+    .perstabs{grid-template-columns:1fr}
+    nav{gap:14px;padding:14px 18px;flex-wrap:wrap}
+    .navlinks{gap:16px;order:3;width:100%;justify-content:flex-start;font-size:14.5px}
+    main{padding:0 18px}
+    .pub{flex-direction:column;gap:4px}
+    .pub .yr{min-width:auto}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="#home" class="brand">Şükrü <span>Demirtaş</span></a>
+    <div class="navlinks">
+      <a href="#home"     data-en>About</a>     <a href="#home"     data-tr>Hakkımda</a>
+      <a href="#research" data-en>Research</a>  <a href="#research" data-tr>Araştırma</a>
+      <a href="#courses"  data-en>Teaching</a>  <a href="#courses"  data-tr>Dersler</a>
+      <a href="#personal" data-en>Personal</a> <a href="#personal" data-tr>Kişisel</a>
+      <a href="#contact"  data-en>Contact</a>   <a href="#contact"  data-tr>İletişim</a>
+    </div>
+    <div class="lang">
+      <button id="btn-en" class="on" onclick="setLang('en')">EN</button>
+      <button id="btn-tr" onclick="setLang('tr')">TR</button>
+    </div>
+    <button class="themebtn" onclick="toggleTheme()" aria-label="Toggle dark mode" title="Theme">
+      <svg class="sun" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </nav>
+</header>
+
+<p class="editnote" data-en>Editable template. Replace the email, photo, links, and confirm your name/title before publishing.</p>
+<p class="editnote" data-tr>Düzenlenebilir şablon. Yayınlamadan önce e-posta, fotoğraf, bağlantıları değiştirin ve ad/unvanınızı kontrol edin.</p>
+
+<main>
+
+<!-- ===================== HOME / ABOUT ===================== -->
+<div id="home" class="page show">
+  <section class="hero">
+    <div>
+      <p class="eyebrow" data-en>Yıldız Technical University</p>
+      <p class="eyebrow" data-tr>Yıldız Teknik Üniversitesi</p>
+      <h1>Şükrü Demirtaş</h1>
+      <p class="role" data-en>Researcher and lecturer in computational economics. I build agent-based models of financial markets and study how individual trading behavior shapes aggregate outcomes such as price dynamics and inflation.</p>
+      <p class="role" data-tr>Hesaplamalı iktisat alanında araştırmacı ve öğretim üyesi. Finansal piyasaların etmen tabanlı modellerini kuruyor, bireysel işlem davranışının fiyat dinamikleri ve enflasyon gibi toplam sonuçları nasıl şekillendirdiğini inceliyorum.</p>
+
+      <div class="actions">
+        <a class="btn solid" href="#research" data-en>View research</a>
+        <a class="btn solid" href="#research" data-tr>Araştırmalar</a>
+        <a class="btn cv" href="cv.pdf" download data-en>Download CV</a>
+        <a class="btn cv" href="cv.pdf" download data-tr>CV İndir</a>
+        <a class="btn ghost" href="#contact" data-en>Get in touch</a>
+        <a class="btn ghost" href="#contact" data-tr>İletişim</a>
+      </div>
+
+      <div class="social">
+        <a href="https://scholar.google.com/" target="_blank" rel="noopener">Google Scholar</a>
+        <a href="https://arxiv.org/a/" target="_blank" rel="noopener">arXiv</a>
+        <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/" target="_blank" rel="noopener">ORCID</a>
+        <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+
+    <div class="portrait">
+      <!-- Replace the placeholder below with: <img src="photo.jpg" alt="Şükrü Demirtaş"> -->
+      <div class="ph">
+        <b>ŞD</b>
+        <span data-en>Add your photo here<br>(photo.jpg)</span>
+        <span data-tr>Fotoğrafınızı buraya ekleyin<br>(photo.jpg)</span>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:24px">
+    <h2 data-en>About</h2>
+    <h2 data-tr>Hakkımda</h2>
+    <p class="lead" data-en>My work sits between economics and computer science. I use agent-based modeling, time series econometrics, and simulation to ask how markets and economies behave when agents are heterogeneous and only boundedly rational.</p>
+    <p class="lead" data-tr>Çalışmalarım iktisat ile bilgisayar bilimi arasında konumlanıyor. Etmen tabanlı modelleme, zaman serisi ekonometrisi ve simülasyon kullanarak, etmenler heterojen ve sınırlı rasyonel olduğunda piyasaların ve ekonomilerin nasıl davrandığını araştırıyorum.</p>
+
+    <div class="grid2" style="margin-top:28px">
+      <div class="card">
+        <h3 data-en>Research interests</h3>
+        <h3 data-tr>Araştırma alanları</h3>
+        <div class="interests">
+          <span class="pill" data-en>Computational Economics</span><span class="pill" data-tr>Hesaplamalı İktisat</span>
+          <span class="pill" data-en>Agent-Based Modeling</span><span class="pill" data-tr>Etmen Tabanlı Modelleme</span>
+          <span class="pill" data-en>Financial Market Simulation</span><span class="pill" data-tr>Finansal Piyasa Simülasyonu</span>
+          <span class="pill" data-en>International Economics</span><span class="pill" data-tr>Uluslararası İktisat</span>
+          <span class="pill" data-en>Free Zone (SEZ) Economics</span><span class="pill" data-tr>Serbest Bölge İktisadı</span>
+          <span class="pill" data-en>Algorithmic Trading</span><span class="pill" data-tr>Algoritmik İşlem</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3 data-en>Methods</h3>
+        <h3 data-tr>Yöntemler</h3>
+        <div class="interests">
+          <span class="pill">ARDL</span>
+          <span class="pill">VAR</span>
+          <span class="pill" data-en>Toda-Yamamoto causality</span><span class="pill" data-tr>Toda-Yamamoto nedensellik</span>
+          <span class="pill" data-en>Agent-Based Modeling (Python / Mesa)</span><span class="pill" data-tr>Etmen Tabanlı Modelleme (Python / Mesa)</span>
+          <span class="pill" data-en>Trading simulation</span><span class="pill" data-tr>İşlem simülasyonu</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===================== RESEARCH ===================== -->
+<div id="research" class="page">
+  <section>
+    <p class="eyebrow" data-en>Publications</p>
+    <p class="eyebrow" data-tr>Yayınlar</p>
+    <h2 data-en>Research &amp; Publications</h2>
+    <h2 data-tr>Araştırma ve Yayınlar</h2>
+    <p data-en>Peer-reviewed articles, preprints, and book chapters in computational economics, agent-based modeling, and international economics. Links open the published version where available.</p>
+    <p data-tr>Hesaplamalı iktisat, etmen tabanlı modelleme ve uluslararası iktisat alanlarında hakemli makaleler, ön baskılar ve kitap bölümleri. Bağlantılar, mevcut olduğunda yayımlanmış sürümü açar.</p>
+
+    <div style="margin-top:18px">
+
+      <div class="pub">
+        <div class="yr">2026</div>
+        <div class="body">
+          <span class="ttl">Demirtaş, Ş., &amp; Şahin (2026). Digital labor platforms and the gig economy.<span class="tag" data-en>Book chapter</span><span class="tag" data-tr>Kitap bölümü</span></span>
+          <span class="meta" data-en>Edited volume, IGI Global.</span>
+          <span class="meta" data-tr>Derleme kitap, IGI Global.</span>
+          <div class="links">
+            <a href="#" target="_blank" rel="noopener">DOI</a>
+            <a href="#" target="_blank" rel="noopener">Publisher</a>
+            <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
+            <code class="bibsrc">@incollection{demirtas2026digital,
+  author    = {Demirtaş, Şükrü and Şahin},
+  title     = {Digital labor platforms and the gig economy},
+  booktitle = {Edited volume},
+  publisher = {IGI Global},
+  year      = {2026}
+}</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div class="yr">2026</div>
+        <div class="body">
+          <span class="ttl">Demirtaş, Ş., &amp; Şahin (2026). EU climate cooperation.<span class="tag" data-en>Book chapter</span><span class="tag" data-tr>Kitap bölümü</span></span>
+          <span class="meta" data-en>Edited volume, IGI Global.</span>
+          <span class="meta" data-tr>Derleme kitap, IGI Global.</span>
+          <div class="links">
+            <a href="#" target="_blank" rel="noopener">DOI</a>
+            <a href="#" target="_blank" rel="noopener">Publisher</a>
+            <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
+            <code class="bibsrc">@incollection{demirtas2026euclimate,
+  author    = {Demirtaş, Şükrü and Şahin},
+  title     = {EU climate cooperation},
+  booktitle = {Edited volume},
+  publisher = {IGI Global},
+  year      = {2026}
+}</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div class="yr">2025</div>
+        <div class="body">
+          <span class="ttl">Çetin, Demirtaş, Ş., &amp; Şahin (2025). Price dynamics in an artificial stock market.<span class="tag">SSCI</span></span>
+          <span class="meta">North American Journal of Economics and Finance (NAJEF).</span>
+          <div class="links">
+            <a href="#" target="_blank" rel="noopener">DOI</a>
+            <a href="#" target="_blank" rel="noopener">PDF</a>
+            <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
+            <code class="bibsrc">@article{cetin2025price,
+  author  = {Çetin and Demirtaş, Şükrü and Şahin},
+  title   = {Price dynamics in an artificial stock market},
+  journal = {North American Journal of Economics and Finance},
+  year    = {2025}
+}</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div class="yr">2025</div>
+        <div class="body">
+          <span class="ttl">Demirtaş, Ş. (2025). Exchange rate sensitivity in a free zone setting.<span class="tag">arXiv</span></span>
+          <span class="meta" data-en>Preprint, arXiv.</span>
+          <span class="meta" data-tr>Ön baskı, arXiv.</span>
+          <div class="links">
+            <a href="#" target="_blank" rel="noopener">arXiv</a>
+            <a href="#" target="_blank" rel="noopener">PDF</a>
+            <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
+            <code class="bibsrc">@article{demirtas2025exchange,
+  author  = {Demirtaş, Şükrü},
+  title   = {Exchange rate sensitivity in a free zone setting},
+  journal = {arXiv preprint},
+  year    = {2025}
+}</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div class="yr" data-en>Acc.</div><div class="yr" data-tr>Kabul</div>
+        <div class="body">
+          <span class="ttl">Demirtaş, Ş. (accepted). Agent-based modeling of inflation and TCMB policy.<span class="tag">ESCI</span></span>
+          <span class="meta" data-en>Central Bank Review (forthcoming).</span>
+          <span class="meta" data-tr>Central Bank Review (yayım aşamasında).</span>
+          <div class="links">
+            <a href="#" target="_blank" rel="noopener">DOI</a>
+            <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
+            <code class="bibsrc">@article{demirtas2025abminflation,
+  author  = {Demirtaş, Şükrü},
+  title   = {Agent-based modeling of inflation and TCMB policy},
+  journal = {Central Bank Review},
+  note    = {Forthcoming},
+  year    = {2025}
+}</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div class="yr">2023</div>
+        <div class="body">
+          <span class="ttl">Demirtaş, Ş., &amp; Şahin (2023). Agent-based financial modeling.</span>
+          <span class="meta">Pamukkale Üniversitesi (PEK).</span>
+          <div class="links">
+            <a href="#" target="_blank" rel="noopener">DergiPark</a>
+            <a href="#" target="_blank" rel="noopener">PDF</a>
+            <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
+            <code class="bibsrc">@article{demirtas2023abm,
+  author  = {Demirtaş, Şükrü and Şahin},
+  title   = {Agent-based financial modeling},
+  journal = {Pamukkale Üniversitesi},
+  year    = {2023}
+}</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div class="yr">2022</div>
+        <div class="body">
+          <span class="ttl">Demirtaş, Ş., &amp; Şahin (2022). Algorithmic trading.</span>
+          <span class="meta">Ulakbilge.</span>
+          <div class="links">
+            <a href="#" target="_blank" rel="noopener">DergiPark</a>
+            <a href="#" target="_blank" rel="noopener">PDF</a>
+            <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
+            <code class="bibsrc">@article{demirtas2022algorithmic,
+  author  = {Demirtaş, Şükrü and Şahin},
+  title   = {Algorithmic trading},
+  journal = {Ulakbilge},
+  year    = {2022}
+}</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div class="yr">2017</div>
+        <div class="body">
+          <span class="ttl">Öncel &amp; Demirtaş, Ş. (2017). An ARDL analysis of free zones.</span>
+          <span class="meta" data-en>Eskişehir Osmangazi University (ESOGÜ).</span>
+          <span class="meta" data-tr>Eskişehir Osmangazi Üniversitesi (ESOGÜ).</span>
+          <div class="links">
+            <a href="#" target="_blank" rel="noopener">DergiPark</a>
+            <a href="#" target="_blank" rel="noopener">PDF</a>
+            <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
+            <code class="bibsrc">@article{oncel2017ardl,
+  author  = {Öncel and Demirtaş, Şükrü},
+  title   = {An ARDL analysis of free zones},
+  journal = {Eskişehir Osmangazi Üniversitesi},
+  year    = {2017}
+}</code>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ===================== TEACHING ===================== -->
+<div id="courses" class="page">
+  <section>
+    <p class="eyebrow" data-en>Teaching</p>
+    <p class="eyebrow" data-tr>Dersler</p>
+    <h2 data-en>Courses</h2>
+    <h2 data-tr>Verdiğim Dersler</h2>
+    <p data-en>Lecture slides, notebooks, and assignments for each course are available for download below.</p>
+    <p data-tr>Her dersin sunumları, defterleri ve ödevleri aşağıdan indirilebilir.</p>
+
+    <div style="margin-top:24px">
+      <details class="course">
+        <summary>
+          <div class="head">
+            <div class="code">IKT1170</div>
+            <h3 data-en>Introduction to Computer Science</h3>
+            <h3 data-tr>Temel Bilgisayar Bilimleri</h3>
+            <div class="inst" data-en>Yıldız Technical University — undergraduate. Python programming with economics and finance applications.</div>
+            <div class="inst" data-tr>Yıldız Teknik Üniversitesi — lisans. İktisat ve finans uygulamalarıyla Python programlama.</div>
+          </div>
+          <span class="chev" aria-hidden="true"></span>
+        </summary>
+        <div class="matwrap">
+          <ul class="materials">
+            <li>
+              <span class="wk" data-en>Week 11</span><span class="wk" data-tr>11. Hafta</span>
+              <a href="materials/ikt1170/hafta11-slaytlar.pdf" data-en>Lecture slides (PDF)</a>
+              <a href="materials/ikt1170/hafta11-slaytlar.pdf" data-tr>Ders slaytları (PDF)</a>
+            </li>
+            <li>
+              <span class="wk" data-en>Week 11</span><span class="wk" data-tr>11. Hafta</span>
+              <a href="materials/ikt1170/hafta11-ogrenci.ipynb" data-en>Student notebook (.ipynb)</a>
+              <a href="materials/ikt1170/hafta11-ogrenci.ipynb" data-tr>Öğrenci defteri (.ipynb)</a>
+            </li>
+            <li>
+              <span class="wk" data-en>Week 12</span><span class="wk" data-tr>12. Hafta</span>
+              <a href="materials/ikt1170/hafta12-slaytlar.pdf" data-en>Lecture slides (PDF)</a>
+              <a href="materials/ikt1170/hafta12-slaytlar.pdf" data-tr>Ders slaytları (PDF)</a>
+            </li>
+            <li>
+              <span class="wk" data-en>Week 13</span><span class="wk" data-tr>13. Hafta</span>
+              <a href="materials/ikt1170/hafta13-slaytlar.pdf" data-en>Lecture slides (PDF)</a>
+              <a href="materials/ikt1170/hafta13-slaytlar.pdf" data-tr>Ders slaytları (PDF)</a>
+            </li>
+            <li>
+              <span class="wk">PS0-PS3</span>
+              <a href="materials/ikt1170/odevler.zip" data-en>Problem sets (ZIP)</a>
+              <a href="materials/ikt1170/odevler.zip" data-tr>Ödevler (ZIP)</a>
+            </li>
+          </ul>
+          <p class="matnote" data-en>Teacher notebooks are shared after the corresponding session.</p>
+          <p class="matnote" data-tr>Öğretmen defterleri ilgili ders işlendikten sonra paylaşılır.</p>
+        </div>
+      </details>
+
+      <details class="course">
+        <summary>
+          <div class="head">
+            <div class="code">ECON521</div>
+            <h3 data-en>Financial Markets and Institutions</h3>
+            <h3 data-tr>Finansal Piyasalar ve Kurumlar</h3>
+            <div class="inst" data-en>Topkapı University — graduate. Structure of financial markets, instruments, and the institutions that govern them.</div>
+            <div class="inst" data-tr>Topkapı Üniversitesi — lisansüstü. Finansal piyasaların yapısı, araçları ve bu piyasaları yöneten kurumlar.</div>
+          </div>
+          <span class="chev" aria-hidden="true"></span>
+        </summary>
+        <div class="matwrap">
+          <ul class="materials">
+            <li>
+              <span class="wk" data-en>Week 7</span><span class="wk" data-tr>7. Hafta</span>
+              <a href="materials/econ521/hafta7-slaytlar.pdf" data-en>Lecture slides (PDF)</a>
+              <a href="materials/econ521/hafta7-slaytlar.pdf" data-tr>Ders slaytları (PDF)</a>
+            </li>
+            <li>
+              <span class="wk" data-en>Week 9</span><span class="wk" data-tr>9. Hafta</span>
+              <a href="materials/econ521/hafta9-slaytlar.pdf" data-en>Lecture slides (PDF)</a>
+              <a href="materials/econ521/hafta9-slaytlar.pdf" data-tr>Ders slaytları (PDF)</a>
+            </li>
+            <li>
+              <span class="wk" data-en>Week 12</span><span class="wk" data-tr>12. Hafta</span>
+              <a href="materials/econ521/hafta12-slaytlar.pdf" data-en>Lecture slides (PDF)</a>
+              <a href="materials/econ521/hafta12-slaytlar.pdf" data-tr>Ders slaytları (PDF)</a>
+            </li>
+            <li>
+              <span class="wk" data-en>Week 13</span><span class="wk" data-tr>13. Hafta</span>
+              <a href="materials/econ521/hafta13-slaytlar.pdf" data-en>Lecture slides (PDF)</a>
+              <a href="materials/econ521/hafta13-slaytlar.pdf" data-tr>Ders slaytları (PDF)</a>
+            </li>
+          </ul>
+          <p class="matnote" data-en>Syllabus available on request.</p>
+          <p class="matnote" data-tr>Ders izlencesi talep üzerine paylaşılır.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+</div>
+
+<!-- ===================== PERSONAL ===================== -->
+<div id="personal" class="page">
+  <section>
+    <p class="eyebrow" data-en>Beyond research</p>
+    <p class="eyebrow" data-tr>Araştırma dışında</p>
+    <h2 data-en>Personal</h2>
+    <h2 data-tr>Kişisel</h2>
+    <p data-en>A running log of things I enjoy away from work. Scores are my own, out of 100, and entirely subjective.</p>
+    <p data-tr>İş dışında keşfettiğim şeylerin küçük bir günlüğü. Puanlar tamamen bana ait, 100 üzerinden ve özneldir.</p>
+
+    <!-- two choices -->
+    <div class="perstabs">
+      <button class="perstab" id="tab-cigars" onclick="showPers('cigars')">
+        <span class="ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="9" width="16" height="6" rx="3"/><path d="M18 12h4"/></svg></span>
+        <span>
+          <span class="pt" data-en>Cigars</span><span class="pt" data-tr>Purolar</span>
+          <span class="ps" data-en>Tasting notes and places</span><span class="ps" data-tr>Tadım notları ve mekanlar</span>
+        </span>
+      </button>
+      <button class="perstab" id="tab-books" onclick="showPers('books')">
+        <span class="ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z"/><path d="M18 3v16"/></svg></span>
+        <span>
+          <span class="pt" data-en>Reading</span><span class="pt" data-tr>Okuduklarım</span>
+          <span class="ps" data-en>Books by year, rated</span><span class="ps" data-tr>Yıllara göre kitaplar, puanlı</span>
+        </span>
+      </button>
+      <button class="perstab" id="tab-travels" onclick="showPers('travels')">
+        <span class="ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5 8 12 8 12s8-7 8-12a8 8 0 0 0-8-8z"/></svg></span>
+        <span>
+          <span class="pt" data-en>Travels</span><span class="pt" data-tr>Seyahatler</span>
+          <span class="ps" data-en>Places I have been</span><span class="ps" data-tr>Gittiğim yerler</span>
+        </span>
+      </button>
+      <button class="perstab" id="tab-coffee" onclick="showPers('coffee')">
+        <span class="ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 10h2a2 2 0 0 1 0 4h-2"/><path d="M8 2c-.5 1 .5 2 0 3M12 2c-.5 1 .5 2 0 3"/></svg></span>
+        <span>
+          <span class="pt" data-en>Coffee</span><span class="pt" data-tr>Kahve</span>
+          <span class="ps" data-en>Beans and brews</span><span class="ps" data-tr>Çekirdekler ve demlemeler</span>
+        </span>
+      </button>
+    </div>
+
+    <!-- ---- CIGARS PANEL ---- -->
+    <div class="perspanel" id="panel-cigars">
+      <p class="mapnote" data-en>Lounges and spots where I have enjoyed a good cigar.</p>
+      <p class="mapnote" data-tr>İyi bir puro içtiğim mekanlar ve duraklar.</p>
+      <div id="cigarmap" class="cigarmap"></div>
+
+      <div class="ratehead">
+        <h3 data-en>Tasting notes</h3>
+        <h3 data-tr>Tadım notları</h3>
+        <span class="count" data-en>rated out of 100</span>
+        <span class="count" data-tr>100 üzerinden</span>
+      </div>
+
+      <div class="rateitem">
+        <div class="ri-main">
+          <span class="ri-title">Cohiba Behike 52</span>
+          <span class="ri-meta" data-en>Cuba · 2024</span>
+          <span class="ri-meta" data-tr>Küba · 2024</span>
+          <span class="ri-note" data-en>Rich and creamy, long finish. A benchmark.</span>
+          <span class="ri-note" data-tr>Zengin ve kremamsı, uzun bitiş. Bir referans noktası.</span>
+        </div>
+        <div class="score">
+          <span class="score-num">95<small>/100</small></span>
+          <span class="bar hi"><i style="width:95%"></i></span>
+        </div>
+      </div>
+
+      <div class="rateitem">
+        <div class="ri-main">
+          <span class="ri-title">Padrón 1964 Anniversary</span>
+          <span class="ri-meta" data-en>Nicaragua · 2024</span>
+          <span class="ri-meta" data-tr>Nikaragua · 2024</span>
+          <span class="ri-note" data-en>Cocoa and coffee, very balanced.</span>
+          <span class="ri-note" data-tr>Kakao ve kahve, çok dengeli.</span>
+        </div>
+        <div class="score">
+          <span class="score-num">92<small>/100</small></span>
+          <span class="bar hi"><i style="width:92%"></i></span>
+        </div>
+      </div>
+
+      <div class="rateitem">
+        <div class="ri-main">
+          <span class="ri-title">Montecristo No. 2</span>
+          <span class="ri-meta" data-en>Cuba · 2023</span>
+          <span class="ri-meta" data-tr>Küba · 2023</span>
+          <span class="ri-note" data-en>Classic torpedo, dependable.</span>
+          <span class="ri-note" data-tr>Klasik torpedo, her zaman güvenilir.</span>
+        </div>
+        <div class="score">
+          <span class="score-num">88<small>/100</small></span>
+          <span class="bar mid"><i style="width:88%"></i></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---- BOOKS PANEL ---- -->
+    <div class="perspanel" id="panel-books">
+      <div class="ratehead">
+        <h3 data-en>Reading</h3>
+        <h3 data-tr>Okuduklarım</h3>
+        <span class="count" data-en>by year read</span>
+        <span class="count" data-tr>okuma yılına göre</span>
+      </div>
+
+      <div class="yeartag">2025</div>
+
+      <div class="rateitem">
+        <div class="ri-main">
+          <span class="ri-title">Title of the book</span>
+          <span class="ri-meta" data-en>Author name</span>
+          <span class="ri-meta" data-tr>Yazar adı</span>
+        </div>
+        <div class="score">
+          <span class="score-num">90<small>/100</small></span>
+          <span class="bar hi"><i style="width:90%"></i></span>
+        </div>
+      </div>
+
+      <div class="rateitem">
+        <div class="ri-main">
+          <span class="ri-title">Kitap adı</span>
+          <span class="ri-meta" data-en>Author name</span>
+          <span class="ri-meta" data-tr>Yazar adı</span>
+        </div>
+        <div class="score">
+          <span class="score-num">84<small>/100</small></span>
+          <span class="bar mid"><i style="width:84%"></i></span>
+        </div>
+      </div>
+
+      <div class="yeartag">2024</div>
+
+      <div class="rateitem">
+        <div class="ri-main">
+          <span class="ri-title">Another title</span>
+          <span class="ri-meta" data-en>Author name</span>
+          <span class="ri-meta" data-tr>Yazar adı</span>
+        </div>
+        <div class="score">
+          <span class="score-num">76<small>/100</small></span>
+          <span class="bar lo"><i style="width:76%"></i></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---- TRAVELS PANEL ---- -->
+    <div class="perspanel" id="panel-travels">
+      <p class="mapnote" data-en>Places I have travelled, for work and for pleasure.</p>
+      <p class="mapnote" data-tr>İş ve keyif için gezdiğim yerler.</p>
+      <div id="travelmap" class="travelmap"></div>
+
+      <div class="ratehead">
+        <h3 data-en>Trips</h3>
+        <h3 data-tr>Geziler</h3>
+        <span class="count" data-en>by year</span>
+        <span class="count" data-tr>yıllara göre</span>
+      </div>
+
+      <div class="yeartag">2025</div>
+
+      <div class="rateitem">
+        <div class="ri-main">
+          <span class="ri-title" data-en>Rome, Italy</span>
+          <span class="ri-title" data-tr>Roma, İtalya</span>
+          <span class="ri-note" data-en>Conference and a few extra days. Add your note.</span>
+          <span class="ri-note" data-tr>Konferans ve birkaç ekstra gün. Notunuzu ekleyin.</span>
+        </div>
+      </div>
+
+      <div class="yeartag">2024</div>
+
+      <div class="rateitem">
+        <div class="ri-main">
+          <span class="ri-title" data-en>Vienna, Austria</span>
+          <span class="ri-title" data-tr>Viyana, Avusturya</span>
+          <span class="ri-note" data-en>Add your note.</span>
+          <span class="ri-note" data-tr>Notunuzu ekleyin.</span>
+        </div>
+      </div>
+
+      <div class="rateitem">
+        <div class="ri-main">
+          <span class="ri-title" data-en>Barcelona, Spain</span>
+          <span class="ri-title" data-tr>Barselona, İspanya</span>
+          <span class="ri-note" data-en>Add your note.</span>
+          <span class="ri-note" data-tr>Notunuzu ekleyin.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---- COFFEE PANEL ---- -->
+    <div class="perspanel" id="panel-coffee">
+      <div class="ratehead">
+        <h3 data-en>Beans and brews</h3>
+        <h3 data-tr>Çekirdekler ve demlemeler</h3>
+        <span class="count" data-en>what I am drinking</span>
+        <span class="count" data-tr>içtiklerim</span>
+      </div>
+
+      <div class="rateitem">
+        <div class="ri-main">
+          <span class="ri-title">Ethiopia Yirgacheffe</span>
+          <span class="ri-meta" data-en>Pour-over · single origin</span>
+          <span class="ri-meta" data-tr>Pour-over · tek menşe</span>
+          <span class="ri-note" data-en>Floral and bright, citrus notes. Add your note.</span>
+          <span class="ri-note" data-tr>Çiçeksi ve canlı, narenciye notaları. Notunuzu ekleyin.</span>
+        </div>
+      </div>
+
+      <div class="rateitem">
+        <div class="ri-main">
+          <span class="ri-title">Colombia Supremo</span>
+          <span class="ri-meta" data-en>Moka pot · medium roast</span>
+          <span class="ri-meta" data-tr>Moka pot · orta kavrum</span>
+          <span class="ri-note" data-en>Balanced, caramel sweetness. Add your note.</span>
+          <span class="ri-note" data-tr>Dengeli, karamel tatlılığı. Notunuzu ekleyin.</span>
+        </div>
+      </div>
+
+      <div class="rateitem">
+        <div class="ri-main">
+          <span class="ri-title" data-en>Turkish coffee, home roast</span>
+          <span class="ri-title" data-tr>Türk kahvesi, ev kavrumu</span>
+          <span class="ri-meta" data-en>Cezve · fine grind</span>
+          <span class="ri-meta" data-tr>Cezve · ince çekim</span>
+          <span class="ri-note" data-en>Add your note.</span>
+          <span class="ri-note" data-tr>Notunuzu ekleyin.</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</div>
+
+<!-- ===================== CONTACT ===================== -->
+<div id="contact" class="page">
+  <section>
+    <p class="eyebrow" data-en>Contact</p>
+    <p class="eyebrow" data-tr>İletişim</p>
+    <h2 data-en>Get in touch</h2>
+    <h2 data-tr>İletişim</h2>
+    <p class="lead" data-en>For collaboration, supervision, or speaking, the best way to reach me is by email.</p>
+    <p class="lead" data-tr>İşbirliği, danışmanlık veya konuşma davetleri için bana ulaşmanın en iyi yolu e-postadır.</p>
+
+    <div class="contact-grid">
+      <div class="card">
+        <div class="ckey">Email</div>
+        <a href="mailto:ad.soyad@yildiz.edu.tr">ad.soyad@yildiz.edu.tr</a>
+      </div>
+      <div class="card">
+        <div class="ckey" data-en>Office</div><div class="ckey" data-tr>Ofis</div>
+        <span data-en>Dept. of Economics, Yıldız Technical University, İstanbul</span>
+        <span data-tr>İktisat Bölümü, Yıldız Teknik Üniversitesi, İstanbul</span>
+      </div>
+      <div class="card">
+        <div class="ckey" data-en>Profiles</div><div class="ckey" data-tr>Profiller</div>
+        <div class="social" style="margin-top:4px">
+          <a href="https://scholar.google.com/" target="_blank" rel="noopener">Scholar</a>
+          <a href="https://orcid.org/" target="_blank" rel="noopener">ORCID</a>
+          <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ckey" data-en>Working with students</div><div class="ckey" data-tr>Öğrencilerle çalışma</div>
+        <span data-en>I welcome motivated students interested in computational economics and ABM.</span>
+        <span data-tr>Hesaplamalı iktisat ve etmen tabanlı modellemeye ilgi duyan istekli öğrencileri memnuniyetle karşılarım.</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+</main>
+
+<footer>
+  <span data-en>© <span id="yr"></span> Şükrü Demirtaş · Built with care · Hosted on GitHub Pages</span>
+  <span data-tr>© <span id="yr2"></span> Şükrü Demirtaş · Özenle hazırlandı · GitHub Pages üzerinde barındırılıyor</span>
+</footer>
+
+<script>
+  let curLang = 'en';
+
+  // ---- theme toggle (persists on a live site; harmless if storage is blocked) ----
+  function applyTheme(t){ document.body.classList.toggle('dark', t==='dark'); }
+  function toggleTheme(){
+    const next = document.body.classList.contains('dark') ? 'light' : 'dark';
+    applyTheme(next);
+    try{ localStorage.setItem('theme', next); }catch(e){}
+  }
+
+  // ---- copy BibTeX to clipboard ----
+  function copyBib(btn){
+    const src = btn.parentElement.querySelector('.bibsrc');
+    if(!src) return;
+    const text = src.textContent;
+    const done = ()=>{
+      const old = btn.textContent;
+      btn.textContent = (curLang==='tr' ? 'Kopyalandı' : 'Copied');
+      setTimeout(()=>{ btn.textContent = old; }, 1400);
+    };
+    try{
+      navigator.clipboard.writeText(text).then(done).catch(()=>fallbackCopy(text, done));
+    }catch(e){ fallbackCopy(text, done); }
+  }
+  function fallbackCopy(text, done){
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); done(); }catch(e){}
+    document.body.removeChild(ta);
+  }
+
+  // ---- language toggle ----
+  function setLang(l){
+    curLang = l;
+    document.body.classList.toggle('tr', l==='tr');
+    document.documentElement.lang = l;
+    document.getElementById('btn-en').classList.toggle('on', l==='en');
+    document.getElementById('btn-tr').classList.toggle('on', l==='tr');
+    // carry language onto links that lead to other pages (course pages)
+    document.querySelectorAll('a[href$=".html"]').forEach(a=>{
+      const base = a.getAttribute('href').split('?')[0];
+      a.setAttribute('href', l==='tr' ? base+'?lang=tr' : base);
+    });
+  }
+
+  // ---- personal: sub-tabs + cigar map ----
+  let cigarMap = null;
+  function initCigarMap(){
+    if(cigarMap || typeof L === 'undefined') return;
+    cigarMap = L.map('cigarmap', {scrollWheelZoom:false}).setView([41.039, 28.986], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom:19,
+      attribution:'&copy; OpenStreetMap'
+    }).addTo(cigarMap);
+    // Edit these spots: name, coordinates, note
+    const spots = [
+      {n:'Cigar lounge (edit)',  lat:41.0369, lng:28.9850, d:'Add your note here'},
+      {n:'Favourite spot (edit)',lat:41.0255, lng:28.9740, d:'Add your note here'},
+      {n:'Travel find (edit)',   lat:41.0082, lng:28.9784, d:'Add your note here'}
+    ];
+    spots.forEach(s=>{
+      L.marker([s.lat, s.lng]).addTo(cigarMap)
+        .bindPopup('<b>'+s.n+'</b><br>'+s.d);
+    });
+  }
+  let travelMap = null;
+  function initTravelMap(){
+    if(travelMap || typeof L === 'undefined') return;
+    travelMap = L.map('travelmap', {scrollWheelZoom:false}).setView([45, 15], 4);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom:19,
+      attribution:'&copy; OpenStreetMap'
+    }).addTo(travelMap);
+    // Edit these places: name, coordinates, year
+    const places = [
+      {n:'Istanbul', lat:41.0082, lng:28.9784, y:'home'},
+      {n:'Rome',     lat:41.9028, lng:12.4964, y:'2025'},
+      {n:'Vienna',   lat:48.2082, lng:16.3738, y:'2024'},
+      {n:'Barcelona',lat:41.3874, lng:2.1686,  y:'2024'}
+    ];
+    places.forEach(p=>{
+      L.marker([p.lat, p.lng]).addTo(travelMap)
+        .bindPopup('<b>'+p.n+'</b><br>'+p.y);
+    });
+  }
+  function showPers(which){
+    ['cigars','books','travels','coffee'].forEach(k=>{
+      document.getElementById('panel-'+k).classList.toggle('show', k===which);
+      document.getElementById('tab-'+k).classList.toggle('active', k===which);
+    });
+    if(which==='cigars'){
+      initCigarMap();
+      setTimeout(()=>{ if(cigarMap) cigarMap.invalidateSize(); }, 60);
+    }
+    if(which==='travels'){
+      initTravelMap();
+      setTimeout(()=>{ if(travelMap) travelMap.invalidateSize(); }, 60);
+    }
+  }
+
+  // ---- simple hash router ----
+  const pages = ['home','research','courses','personal','contact'];
+  function route(){
+    let id = location.hash.replace('#','') || 'home';
+    if(!pages.includes(id)) id='home';
+    pages.forEach(p=>{
+      document.getElementById(p).classList.toggle('show', p===id);
+    });
+    document.querySelectorAll('.navlinks a').forEach(a=>{
+      a.classList.toggle('active', a.getAttribute('href')==='#'+id);
+    });
+    window.scrollTo({top:0,behavior:'instant'});
+    if(id==='personal' && cigarMap){ setTimeout(()=>cigarMap.invalidateSize(), 60); }
+    if(id==='personal' && travelMap){ setTimeout(()=>travelMap.invalidateSize(), 60); }
+  }
+  window.addEventListener('hashchange', route);
+
+  // year + init (respect ?lang= coming back from a course page)
+  const y = new Date().getFullYear();
+  document.getElementById('yr').textContent = y;
+  document.getElementById('yr2').textContent = y;
+  const urlLang = new URLSearchParams(location.search).get('lang');
+  setLang(urlLang==='tr' ? 'tr' : 'en');
+  try{ applyTheme(localStorage.getItem('theme') || 'light'); }catch(e){ applyTheme('light'); }
+  route();
+</script>
+
+<!--
+  PRIVACY-FRIENDLY ANALYTICS (optional, off by default)
+  GoatCounter is free for personal sites and needs no cookie banner.
+  1. Sign up at https://www.goatcounter.com and pick a code (e.g. "demirtas").
+  2. Uncomment the line below and replace MYCODE with your code.
+  3. Plausible is an alternative if you prefer; its snippet goes here too.
+-->
+<!-- <script data-goatcounter="https://MYCODE.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script> -->
+
+</body>
+</html>
