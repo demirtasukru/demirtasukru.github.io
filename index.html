@@ -140,6 +140,13 @@
   }
   .citebtn:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
   .bibsrc{display:none}
+  .wip{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'Spectral',serif;font-size:13px;letter-spacing:.4px;color:var(--gold-deep);
+    background:var(--paper-2);border:1px dashed var(--gold);border-radius:999px;
+    padding:6px 14px;margin:2px 0 14px
+  }
+  .wip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0}
 
   /* ---- LAYOUT ---- */
   main{max-width:var(--maxw);margin:0 auto;padding:0 28px;position:relative;z-index:1}
@@ -344,9 +351,8 @@
   .mapnote{font-size:13px;color:var(--ink-soft);font-style:italic;margin-bottom:8px}
 
   /* hide elements of the non-active language */
-  [data-tr]{display:none}
+  body:not(.tr) [data-tr]{display:none}
   body.tr [data-en]{display:none}
-  body.tr [data-tr]{display:revert}
 
   @media(max-width:760px){
     body{font-size:17px}
@@ -385,8 +391,6 @@
   </nav>
 </header>
 
-<p class="editnote" data-en>Editable template. Replace the email, photo, links, and confirm your name/title before publishing.</p>
-<p class="editnote" data-tr>Düzenlenebilir şablon. Yayınlamadan önce e-posta, fotoğraf, bağlantıları değiştirin ve ad/unvanınızı kontrol edin.</p>
 
 <main>
 
@@ -396,9 +400,9 @@
     <div>
       <p class="eyebrow" data-en>Yıldız Technical University</p>
       <p class="eyebrow" data-tr>Yıldız Teknik Üniversitesi</p>
-      <h1>Şükrü Demirtaş</h1>
-      <p class="role" data-en>Researcher and lecturer in computational economics. I build agent-based models of financial markets and study how individual trading behavior shapes aggregate outcomes such as price dynamics and inflation.</p>
-      <p class="role" data-tr>Hesaplamalı iktisat alanında araştırmacı ve öğretim üyesi. Finansal piyasaların etmen tabanlı modellerini kuruyor, bireysel işlem davranışının fiyat dinamikleri ve enflasyon gibi toplam sonuçları nasıl şekillendirdiğini inceliyorum.</p>
+      <h1>Şükrü C. Demirtaş</h1>
+      <p class="role" data-en>Computational social scientist working in economics and finance. I build agent-based models of financial markets and study how individual behavior shapes aggregate outcomes such as price dynamics, inflation, and central bank policy.</p>
+      <p class="role" data-tr>Ekonomi ve finans alanında çalışan hesaplamalı sosyal bilimci. Finansal piyasaların etmen tabanlı modellerini kuruyor, bireysel davranışın fiyat dinamikleri, enflasyon ve merkez bankası politikası gibi toplam sonuçları nasıl şekillendirdiğini inceliyorum.</p>
 
       <div class="actions">
         <a class="btn solid" href="#research" data-en>View research</a>
@@ -410,11 +414,10 @@
       </div>
 
       <div class="social">
-        <a href="https://scholar.google.com/" target="_blank" rel="noopener">Google Scholar</a>
-        <a href="https://arxiv.org/a/" target="_blank" rel="noopener">arXiv</a>
-        <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://orcid.org/" target="_blank" rel="noopener">ORCID</a>
-        <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://scholar.google.com.tr/citations?user=6zjV69AAAAAJ" target="_blank" rel="noopener">Google Scholar</a>
+        <a href="https://orcid.org/0000-0002-6953-3599" target="_blank" rel="noopener">ORCID</a>
+        <a href="https://arxiv.org/abs/2503.03323" target="_blank" rel="noopener">arXiv</a>
+        <a href="https://tr.linkedin.com/in/demirtasukru" target="_blank" rel="noopener">LinkedIn</a>
       </div>
     </div>
 
@@ -439,23 +442,23 @@
         <h3 data-en>Research interests</h3>
         <h3 data-tr>Araştırma alanları</h3>
         <div class="interests">
-          <span class="pill" data-en>Computational Economics</span><span class="pill" data-tr>Hesaplamalı İktisat</span>
+          <span class="pill" data-en>Economics</span><span class="pill" data-tr>Ekonomi</span>
+          <span class="pill" data-en>Finance</span><span class="pill" data-tr>Finans</span>
           <span class="pill" data-en>Agent-Based Modeling</span><span class="pill" data-tr>Etmen Tabanlı Modelleme</span>
-          <span class="pill" data-en>Financial Market Simulation</span><span class="pill" data-tr>Finansal Piyasa Simülasyonu</span>
-          <span class="pill" data-en>International Economics</span><span class="pill" data-tr>Uluslararası İktisat</span>
-          <span class="pill" data-en>Free Zone (SEZ) Economics</span><span class="pill" data-tr>Serbest Bölge İktisadı</span>
-          <span class="pill" data-en>Algorithmic Trading</span><span class="pill" data-tr>Algoritmik İşlem</span>
+          <span class="pill" data-en>Artificial Stock Markets</span><span class="pill" data-tr>Yapay Borsa Modelleri</span>
+          <span class="pill" data-en>Central Banking</span><span class="pill" data-tr>Merkez Bankacılığı</span>
         </div>
       </div>
       <div class="card">
-        <h3 data-en>Methods</h3>
-        <h3 data-tr>Yöntemler</h3>
+        <h3 data-en>Tools &amp; methods</h3>
+        <h3 data-tr>Araçlar ve yöntemler</h3>
         <div class="interests">
-          <span class="pill">ARDL</span>
-          <span class="pill">VAR</span>
-          <span class="pill" data-en>Toda-Yamamoto causality</span><span class="pill" data-tr>Toda-Yamamoto nedensellik</span>
-          <span class="pill" data-en>Agent-Based Modeling (Python / Mesa)</span><span class="pill" data-tr>Etmen Tabanlı Modelleme (Python / Mesa)</span>
-          <span class="pill" data-en>Trading simulation</span><span class="pill" data-tr>İşlem simülasyonu</span>
+          <span class="pill">Python</span>
+          <span class="pill">NetLogo</span>
+          <span class="pill">E-Views</span>
+          <span class="pill">Oracle</span>
+          <span class="pill">LaTeX</span>
+          <span class="pill" data-en>Machine Learning</span><span class="pill" data-tr>Makine Öğrenmesi</span>
         </div>
       </div>
     </div>
@@ -469,48 +472,29 @@
     <p class="eyebrow" data-tr>Yayınlar</p>
     <h2 data-en>Research &amp; Publications</h2>
     <h2 data-tr>Araştırma ve Yayınlar</h2>
-    <p data-en>Peer-reviewed articles, preprints, and book chapters in computational economics, agent-based modeling, and international economics. Links open the published version where available.</p>
-    <p data-tr>Hesaplamalı iktisat, etmen tabanlı modelleme ve uluslararası iktisat alanlarında hakemli makaleler, ön baskılar ve kitap bölümleri. Bağlantılar, mevcut olduğunda yayımlanmış sürümü açar.</p>
+    <p data-en>Peer-reviewed journal articles, a preprint, and book chapters in economics, finance, agent-based modeling, and central banking. Use the BibTeX button to copy a citation.</p>
+    <p data-tr>Ekonomi, finans, etmen tabanlı modelleme ve merkez bankacılığı alanlarında hakemli dergi makaleleri, bir ön baskı ve kitap bölümleri. Künyeyi kopyalamak için BibTeX düğmesini kullanın.</p>
 
-    <div style="margin-top:18px">
-
-      <div class="pub">
-        <div class="yr">2026</div>
-        <div class="body">
-          <span class="ttl">Demirtaş, Ş., &amp; Şahin (2026). Digital labor platforms and the gig economy.<span class="tag" data-en>Book chapter</span><span class="tag" data-tr>Kitap bölümü</span></span>
-          <span class="meta" data-en>Edited volume, IGI Global.</span>
-          <span class="meta" data-tr>Derleme kitap, IGI Global.</span>
-          <div class="links">
-            <a href="#" target="_blank" rel="noopener">DOI</a>
-            <a href="#" target="_blank" rel="noopener">Publisher</a>
-            <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
-            <code class="bibsrc">@incollection{demirtas2026digital,
-  author    = {Demirtaş, Şükrü and Şahin},
-  title     = {Digital labor platforms and the gig economy},
-  booktitle = {Edited volume},
-  publisher = {IGI Global},
-  year      = {2026}
-}</code>
-          </div>
-        </div>
-      </div>
+    <h3 data-en style="font-size:22px;margin-top:34px">Journal articles &amp; preprints</h3>
+    <h3 data-tr style="font-size:22px;margin-top:34px">Dergi makaleleri ve ön baskılar</h3>
+    <div style="margin-top:12px">
 
       <div class="pub">
         <div class="yr">2026</div>
         <div class="body">
-          <span class="ttl">Demirtaş, Ş., &amp; Şahin (2026). EU climate cooperation.<span class="tag" data-en>Book chapter</span><span class="tag" data-tr>Kitap bölümü</span></span>
-          <span class="meta" data-en>Edited volume, IGI Global.</span>
-          <span class="meta" data-tr>Derleme kitap, IGI Global.</span>
+          <span class="ttl">Demirtaş, Ş. C., &amp; Şahin, S. Ç. (2026). Agent-based modeling of inflation dynamics: Interactions between market structure, firm pricing, expectations, and central bank in Türkiye.<span class="tag">ESCI</span></span>
+          <span class="meta">Central Bank Review, 26(2), 100253.</span>
           <div class="links">
             <a href="#" target="_blank" rel="noopener">DOI</a>
-            <a href="#" target="_blank" rel="noopener">Publisher</a>
             <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
-            <code class="bibsrc">@incollection{demirtas2026euclimate,
-  author    = {Demirtaş, Şükrü and Şahin},
-  title     = {EU climate cooperation},
-  booktitle = {Edited volume},
-  publisher = {IGI Global},
-  year      = {2026}
+            <code class="bibsrc">@article{demirtas2026inflation,
+  author  = {Demirtaş, Şükrü C. and Çakmak Şahin, Senem},
+  title   = {Agent-based modeling of inflation dynamics: Interactions between market structure, firm pricing, expectations, and central bank in Türkiye},
+  journal = {Central Bank Review},
+  volume  = {26},
+  number  = {2},
+  pages   = {100253},
+  year    = {2026}
 }</code>
           </div>
         </div>
@@ -519,16 +503,16 @@
       <div class="pub">
         <div class="yr">2025</div>
         <div class="body">
-          <span class="ttl">Çetin, Demirtaş, Ş., &amp; Şahin (2025). Price dynamics in an artificial stock market.<span class="tag">SSCI</span></span>
-          <span class="meta">North American Journal of Economics and Finance (NAJEF).</span>
+          <span class="ttl">Çetin, U., Demirtaş, Ş. C., &amp; Şahin, S. Ç. (2025). Price dynamics in artificial stock market with realistic order book mechanism.<span class="tag">SSCI</span></span>
+          <span class="meta">The North American Journal of Economics and Finance, 102504.</span>
           <div class="links">
             <a href="#" target="_blank" rel="noopener">DOI</a>
-            <a href="#" target="_blank" rel="noopener">PDF</a>
             <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
             <code class="bibsrc">@article{cetin2025price,
-  author  = {Çetin and Demirtaş, Şükrü and Şahin},
-  title   = {Price dynamics in an artificial stock market},
-  journal = {North American Journal of Economics and Finance},
+  author  = {Çetin, Uzay and Demirtaş, Şükrü C. and Çakmak Şahin, Senem},
+  title   = {Price dynamics in artificial stock market with realistic order book mechanism},
+  journal = {The North American Journal of Economics and Finance},
+  pages   = {102504},
   year    = {2025}
 }</code>
           </div>
@@ -538,37 +522,16 @@
       <div class="pub">
         <div class="yr">2025</div>
         <div class="body">
-          <span class="ttl">Demirtaş, Ş. (2025). Exchange rate sensitivity in a free zone setting.<span class="tag">arXiv</span></span>
-          <span class="meta" data-en>Preprint, arXiv.</span>
-          <span class="meta" data-tr>Ön baskı, arXiv.</span>
+          <span class="ttl">Demirtaş, S. C. (2025). Exchange rate sensitivity in free zone trade: An empirical study of the Istanbul Atatürk Airport Free Zone.<span class="tag">arXiv</span></span>
+          <span class="meta">arXiv preprint arXiv:2503.03323.</span>
           <div class="links">
-            <a href="#" target="_blank" rel="noopener">arXiv</a>
-            <a href="#" target="_blank" rel="noopener">PDF</a>
+            <a href="https://arxiv.org/abs/2503.03323" target="_blank" rel="noopener">arXiv</a>
+            <a href="https://arxiv.org/pdf/2503.03323" target="_blank" rel="noopener">PDF</a>
             <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
             <code class="bibsrc">@article{demirtas2025exchange,
-  author  = {Demirtaş, Şükrü},
-  title   = {Exchange rate sensitivity in a free zone setting},
-  journal = {arXiv preprint},
-  year    = {2025}
-}</code>
-          </div>
-        </div>
-      </div>
-
-      <div class="pub">
-        <div class="yr" data-en>Acc.</div><div class="yr" data-tr>Kabul</div>
-        <div class="body">
-          <span class="ttl">Demirtaş, Ş. (accepted). Agent-based modeling of inflation and TCMB policy.<span class="tag">ESCI</span></span>
-          <span class="meta" data-en>Central Bank Review (forthcoming).</span>
-          <span class="meta" data-tr>Central Bank Review (yayım aşamasında).</span>
-          <div class="links">
-            <a href="#" target="_blank" rel="noopener">DOI</a>
-            <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
-            <code class="bibsrc">@article{demirtas2025abminflation,
-  author  = {Demirtaş, Şükrü},
-  title   = {Agent-based modeling of inflation and TCMB policy},
-  journal = {Central Bank Review},
-  note    = {Forthcoming},
+  author  = {Demirtaş, Şükrü C.},
+  title   = {Exchange rate sensitivity in free zone trade: An empirical study of the Istanbul Atatürk Airport Free Zone},
+  journal = {arXiv preprint arXiv:2503.03323},
   year    = {2025}
 }</code>
           </div>
@@ -578,16 +541,18 @@
       <div class="pub">
         <div class="yr">2023</div>
         <div class="body">
-          <span class="ttl">Demirtaş, Ş., &amp; Şahin (2023). Agent-based financial modeling.</span>
-          <span class="meta">Pamukkale Üniversitesi (PEK).</span>
+          <span class="ttl">Demirtaş, Ş. C., &amp; Şahin, S. Ç. (2023). Ajan bazlı finansal modelleme ve uygulama prosedürü.</span>
+          <span class="meta">Politik Ekonomik Kuram, 7(2), 201-214.</span>
           <div class="links">
             <a href="#" target="_blank" rel="noopener">DergiPark</a>
-            <a href="#" target="_blank" rel="noopener">PDF</a>
             <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
-            <code class="bibsrc">@article{demirtas2023abm,
-  author  = {Demirtaş, Şükrü and Şahin},
-  title   = {Agent-based financial modeling},
-  journal = {Pamukkale Üniversitesi},
+            <code class="bibsrc">@article{demirtas2023ajan,
+  author  = {Demirtaş, Şükrü C. and Çakmak Şahin, Senem},
+  title   = {Ajan bazlı finansal modelleme ve uygulama prosedürü},
+  journal = {Politik Ekonomik Kuram},
+  volume  = {7},
+  number  = {2},
+  pages   = {201--214},
   year    = {2023}
 }</code>
           </div>
@@ -597,16 +562,17 @@
       <div class="pub">
         <div class="yr">2022</div>
         <div class="body">
-          <span class="ttl">Demirtaş, Ş., &amp; Şahin (2022). Algorithmic trading.</span>
-          <span class="meta">Ulakbilge.</span>
+          <span class="ttl">Demirtaş, Ş. C., &amp; Şahin, S. Ç. (2022). Algorithmic trading versus human traders at different information levels.</span>
+          <span class="meta">Ulakbilge, 75, 825-835.</span>
           <div class="links">
             <a href="#" target="_blank" rel="noopener">DergiPark</a>
-            <a href="#" target="_blank" rel="noopener">PDF</a>
             <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
             <code class="bibsrc">@article{demirtas2022algorithmic,
-  author  = {Demirtaş, Şükrü and Şahin},
-  title   = {Algorithmic trading},
+  author  = {Demirtaş, Şükrü C. and Çakmak Şahin, Senem},
+  title   = {Algorithmic trading versus human traders at different information levels},
   journal = {Ulakbilge},
+  volume  = {75},
+  pages   = {825--835},
   year    = {2022}
 }</code>
           </div>
@@ -616,18 +582,65 @@
       <div class="pub">
         <div class="yr">2017</div>
         <div class="body">
-          <span class="ttl">Öncel &amp; Demirtaş, Ş. (2017). An ARDL analysis of free zones.</span>
-          <span class="meta" data-en>Eskişehir Osmangazi University (ESOGÜ).</span>
-          <span class="meta" data-tr>Eskişehir Osmangazi Üniversitesi (ESOGÜ).</span>
+          <span class="ttl">Öncel, A., &amp; Demirtaş, Ş. C. (2017). Serbest bölgelerin dış ticarete etkileri: Türkiye üzerine ARDL modeli ile ampirik bir uygulama.</span>
+          <span class="meta">Eskişehir Osmangazi Üniversitesi İİBF Dergisi, 12(1), 65-82.</span>
           <div class="links">
             <a href="#" target="_blank" rel="noopener">DergiPark</a>
-            <a href="#" target="_blank" rel="noopener">PDF</a>
             <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
-            <code class="bibsrc">@article{oncel2017ardl,
-  author  = {Öncel and Demirtaş, Şükrü},
-  title   = {An ARDL analysis of free zones},
-  journal = {Eskişehir Osmangazi Üniversitesi},
+            <code class="bibsrc">@article{oncel2017serbest,
+  author  = {Öncel, Abidin and Demirtaş, Şükrü C.},
+  title   = {Serbest bölgelerin dış ticarete etkileri: Türkiye üzerine ARDL modeli ile ampirik bir uygulama},
+  journal = {Eskişehir Osmangazi Üniversitesi İİBF Dergisi},
+  volume  = {12},
+  number  = {1},
+  pages   = {65--82},
   year    = {2017}
+}</code>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <h3 data-en style="font-size:22px;margin-top:40px">Book chapters</h3>
+    <h3 data-tr style="font-size:22px;margin-top:40px">Kitap bölümleri</h3>
+    <div style="margin-top:12px">
+
+      <div class="pub">
+        <div class="yr">2026</div>
+        <div class="body">
+          <span class="ttl">Demirtaş, Ş. C., &amp; Çakmak Şahin, S. (2026). The digital platform&#x2019;s influence on work and social inequality: gender, migration, and labor markets.</span>
+          <span class="meta" data-en>In Regulating the Gig Economy in the European Union: Challenges, Innovations, and Global Impacts. IGI Global.</span>
+          <span class="meta" data-tr>Regulating the Gig Economy in the European Union: Challenges, Innovations, and Global Impacts içinde. IGI Global.</span>
+          <div class="links">
+            <a href="#" target="_blank" rel="noopener">Publisher</a>
+            <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
+            <code class="bibsrc">@incollection{demirtas2026digital,
+  author    = {Demirtaş, Şükrü C. and Çakmak Şahin, Senem},
+  title     = {The digital platform's influence on work and social inequality: gender, migration, and labor markets},
+  booktitle = {Regulating the Gig Economy in the European Union: Challenges, Innovations, and Global Impacts},
+  publisher = {IGI Global},
+  year      = {2026}
+}</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div class="yr">2025</div>
+        <div class="body">
+          <span class="ttl">Demirtaş, Ş. C., &amp; Çakmak Şahin, S. (2025). The role and impact of regional climate cooperation in the EU in the green transition.</span>
+          <span class="meta" data-en>In Cross-Border Cooperation in the Age of Climate Change. IGI Global.</span>
+          <span class="meta" data-tr>Cross-Border Cooperation in the Age of Climate Change içinde. IGI Global.</span>
+          <div class="links">
+            <a href="#" target="_blank" rel="noopener">Publisher</a>
+            <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
+            <code class="bibsrc">@incollection{demirtas2025climate,
+  author    = {Demirtaş, Şükrü C. and Çakmak Şahin, Senem},
+  title     = {The role and impact of regional climate cooperation in the EU in the green transition},
+  booktitle = {Cross-Border Cooperation in the Age of Climate Change},
+  publisher = {IGI Global},
+  year      = {2025}
 }</code>
           </div>
         </div>
@@ -654,82 +667,21 @@
             <div class="code">IKT1170</div>
             <h3 data-en>Introduction to Computer Science</h3>
             <h3 data-tr>Temel Bilgisayar Bilimleri</h3>
-            <div class="inst" data-en>Yıldız Technical University — undergraduate. Python programming with economics and finance applications.</div>
-            <div class="inst" data-tr>Yıldız Teknik Üniversitesi — lisans. İktisat ve finans uygulamalarıyla Python programlama.</div>
+            <div class="inst" data-en>Yıldız Technical University — undergraduate, Spring 2025-2026. Python programming with economics and finance applications.</div>
+            <div class="inst" data-tr>Yıldız Teknik Üniversitesi — lisans, 2025-2026 Bahar. İktisat ve finans uygulamalarıyla Python programlama.</div>
           </div>
           <span class="chev" aria-hidden="true"></span>
         </summary>
         <div class="matwrap">
+          <span class="wip" data-en>Under construction. Materials will be updated soon.</span>
+          <span class="wip" data-tr>Yapım aşamasında. Materyaller yakında güncellenecek.</span>
           <ul class="materials">
-            <li>
-              <span class="wk" data-en>Week 11</span><span class="wk" data-tr>11. Hafta</span>
-              <a href="materials/ikt1170/hafta11-slaytlar.pdf" data-en>Lecture slides (PDF)</a>
-              <a href="materials/ikt1170/hafta11-slaytlar.pdf" data-tr>Ders slaytları (PDF)</a>
-            </li>
-            <li>
-              <span class="wk" data-en>Week 11</span><span class="wk" data-tr>11. Hafta</span>
-              <a href="materials/ikt1170/hafta11-ogrenci.ipynb" data-en>Student notebook (.ipynb)</a>
-              <a href="materials/ikt1170/hafta11-ogrenci.ipynb" data-tr>Öğrenci defteri (.ipynb)</a>
-            </li>
-            <li>
-              <span class="wk" data-en>Week 12</span><span class="wk" data-tr>12. Hafta</span>
-              <a href="materials/ikt1170/hafta12-slaytlar.pdf" data-en>Lecture slides (PDF)</a>
-              <a href="materials/ikt1170/hafta12-slaytlar.pdf" data-tr>Ders slaytları (PDF)</a>
-            </li>
-            <li>
-              <span class="wk" data-en>Week 13</span><span class="wk" data-tr>13. Hafta</span>
-              <a href="materials/ikt1170/hafta13-slaytlar.pdf" data-en>Lecture slides (PDF)</a>
-              <a href="materials/ikt1170/hafta13-slaytlar.pdf" data-tr>Ders slaytları (PDF)</a>
-            </li>
-            <li>
-              <span class="wk">PS0-PS3</span>
-              <a href="materials/ikt1170/odevler.zip" data-en>Problem sets (ZIP)</a>
-              <a href="materials/ikt1170/odevler.zip" data-tr>Ödevler (ZIP)</a>
-            </li>
           </ul>
-          <p class="matnote" data-en>Teacher notebooks are shared after the corresponding session.</p>
-          <p class="matnote" data-tr>Öğretmen defterleri ilgili ders işlendikten sonra paylaşılır.</p>
+          <p class="matnote" data-en>Notes are shared after the corresponding session.</p>
+          <p class="matnote" data-tr>Notlar ilgili ders işlendikten sonra paylaşılır.</p>
         </div>
       </details>
 
-      <details class="course">
-        <summary>
-          <div class="head">
-            <div class="code">ECON521</div>
-            <h3 data-en>Financial Markets and Institutions</h3>
-            <h3 data-tr>Finansal Piyasalar ve Kurumlar</h3>
-            <div class="inst" data-en>Topkapı University — graduate. Structure of financial markets, instruments, and the institutions that govern them.</div>
-            <div class="inst" data-tr>Topkapı Üniversitesi — lisansüstü. Finansal piyasaların yapısı, araçları ve bu piyasaları yöneten kurumlar.</div>
-          </div>
-          <span class="chev" aria-hidden="true"></span>
-        </summary>
-        <div class="matwrap">
-          <ul class="materials">
-            <li>
-              <span class="wk" data-en>Week 7</span><span class="wk" data-tr>7. Hafta</span>
-              <a href="materials/econ521/hafta7-slaytlar.pdf" data-en>Lecture slides (PDF)</a>
-              <a href="materials/econ521/hafta7-slaytlar.pdf" data-tr>Ders slaytları (PDF)</a>
-            </li>
-            <li>
-              <span class="wk" data-en>Week 9</span><span class="wk" data-tr>9. Hafta</span>
-              <a href="materials/econ521/hafta9-slaytlar.pdf" data-en>Lecture slides (PDF)</a>
-              <a href="materials/econ521/hafta9-slaytlar.pdf" data-tr>Ders slaytları (PDF)</a>
-            </li>
-            <li>
-              <span class="wk" data-en>Week 12</span><span class="wk" data-tr>12. Hafta</span>
-              <a href="materials/econ521/hafta12-slaytlar.pdf" data-en>Lecture slides (PDF)</a>
-              <a href="materials/econ521/hafta12-slaytlar.pdf" data-tr>Ders slaytları (PDF)</a>
-            </li>
-            <li>
-              <span class="wk" data-en>Week 13</span><span class="wk" data-tr>13. Hafta</span>
-              <a href="materials/econ521/hafta13-slaytlar.pdf" data-en>Lecture slides (PDF)</a>
-              <a href="materials/econ521/hafta13-slaytlar.pdf" data-tr>Ders slaytları (PDF)</a>
-            </li>
-          </ul>
-          <p class="matnote" data-en>Syllabus available on request.</p>
-          <p class="matnote" data-tr>Ders izlencesi talep üzerine paylaşılır.</p>
-        </div>
-      </details>
     </div>
   </section>
 </div>
@@ -778,6 +730,8 @@
 
     <!-- ---- CIGARS PANEL ---- -->
     <div class="perspanel" id="panel-cigars">
+      <span class="wip" data-en>Under construction. To be updated.</span>
+      <span class="wip" data-tr>Yapım aşamasında. Güncellenecek.</span>
       <p class="mapnote" data-en>Lounges and spots where I have enjoyed a good cigar.</p>
       <p class="mapnote" data-tr>İyi bir puro içtiğim mekanlar ve duraklar.</p>
       <div id="cigarmap" class="cigarmap"></div>
@@ -834,6 +788,8 @@
 
     <!-- ---- BOOKS PANEL ---- -->
     <div class="perspanel" id="panel-books">
+      <span class="wip" data-en>Under construction. To be updated.</span>
+      <span class="wip" data-tr>Yapım aşamasında. Güncellenecek.</span>
       <div class="ratehead">
         <h3 data-en>Reading</h3>
         <h3 data-tr>Okuduklarım</h3>
@@ -884,6 +840,8 @@
 
     <!-- ---- TRAVELS PANEL ---- -->
     <div class="perspanel" id="panel-travels">
+      <span class="wip" data-en>Under construction. To be updated.</span>
+      <span class="wip" data-tr>Yapım aşamasında. Güncellenecek.</span>
       <p class="mapnote" data-en>Places I have travelled, for work and for pleasure.</p>
       <p class="mapnote" data-tr>İş ve keyif için gezdiğim yerler.</p>
       <div id="travelmap" class="travelmap"></div>
@@ -896,7 +854,7 @@
       </div>
 
       <div class="yeartag">2025</div>
-
+<!--
       <div class="rateitem">
         <div class="ri-main">
           <span class="ri-title" data-en>Rome, Italy</span>
@@ -926,9 +884,11 @@
         </div>
       </div>
     </div>
-
+-->
     <!-- ---- COFFEE PANEL ---- -->
     <div class="perspanel" id="panel-coffee">
+      <span class="wip" data-en>Under construction. To be updated.</span>
+      <span class="wip" data-tr>Yapım aşamasında. Güncellenecek.</span>
       <div class="ratehead">
         <h3 data-en>Beans and brews</h3>
         <h3 data-tr>Çekirdekler ve demlemeler</h3>
@@ -984,7 +944,7 @@
     <div class="contact-grid">
       <div class="card">
         <div class="ckey">Email</div>
-        <a href="mailto:ad.soyad@yildiz.edu.tr">ad.soyad@yildiz.edu.tr</a>
+        <a href="mailto:sukru.demirtas@yildiz.edu.tr">sukru.demirtas@yildiz.edu.tr</a>
       </div>
       <div class="card">
         <div class="ckey" data-en>Office</div><div class="ckey" data-tr>Ofis</div>
@@ -994,15 +954,15 @@
       <div class="card">
         <div class="ckey" data-en>Profiles</div><div class="ckey" data-tr>Profiller</div>
         <div class="social" style="margin-top:4px">
-          <a href="https://scholar.google.com/" target="_blank" rel="noopener">Scholar</a>
-          <a href="https://orcid.org/" target="_blank" rel="noopener">ORCID</a>
-          <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://scholar.google.com.tr/citations?user=6zjV69AAAAAJ" target="_blank" rel="noopener">Scholar</a>
+          <a href="https://orcid.org/0000-0002-6953-3599" target="_blank" rel="noopener">ORCID</a>
+          <a href="https://tr.linkedin.com/in/demirtasukru" target="_blank" rel="noopener">LinkedIn</a>
         </div>
       </div>
       <div class="card">
         <div class="ckey" data-en>Working with students</div><div class="ckey" data-tr>Öğrencilerle çalışma</div>
-        <span data-en>I welcome motivated students interested in computational economics and ABM.</span>
-        <span data-tr>Hesaplamalı iktisat ve etmen tabanlı modellemeye ilgi duyan istekli öğrencileri memnuniyetle karşılarım.</span>
+        <span data-en>I welcome motivated students interested in computational social science and ABM.</span>
+        <span data-tr>Hesaplamalı sosyal bilimler ve ajan bazlı modellemeye ilgi duyan istekli öğrencileri memnuniyetle karşılarım.</span>
       </div>
     </div>
   </section>
