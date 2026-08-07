@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Şükrü Demirtaş</title>
+<meta name="description" content="Şükrü Demirtaş — Computational economics, agent-based modeling, and financial market simulation. Yıldız Technical University.">
+
+<!-- Open Graph / social sharing. Replace the URL and image with your live site values. -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Şükrü Demirtaş">
+<meta property="og:description" content="Computational economics, agent-based modeling, and financial market simulation.">
+<meta property="og:url" content="https://kullaniciadi.github.io/">
+<meta property="og:image" content="https://kullaniciadi.github.io/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Şükrü Demirtaş">
+<meta name="twitter:description" content="Computational economics, agent-based modeling, and financial market simulation.">
+<meta name="theme-color" content="#3b5998">
+
+<!-- Favicon: inline Ş monogram in the classic blue -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='6' fill='%233b5998'/%3E%3Ctext x='50%25' y='54%25' font-family='Tahoma,Verdana,sans-serif' font-size='34' font-weight='bold' fill='%23ffffff' text-anchor='middle' dominant-baseline='middle'%3E%C5%9E%3C/text%3E%3C/svg%3E">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+  /* =========================================================
+     Old-Facebook (2008-2010) theme.
+     Layout follows the original profile page: picture top-left,
+     name to the right of the picture, tabs under the name.
+     Palette: bar #3b5998, headers #6d84b4, wash #d8dfea,
+     white boxes on #e9eaed, 1px #ccc borders, Lucida/Tahoma.
+     Base size lifted from FB's 11px to 13px for readability.
+     ========================================================= */
+  :root{
+    --bar:#3b5998;
+    --bar-d:#29447e;
+    --blue-m:#6d84b4;
+    --blue-l:#8b9dc3;
+    --wash:#d8dfea;
+    --page:#e9eaed;
+    --box:#ffffff;
+    --line:#cccccc;
+    --line-soft:#e6e6e6;
+    --text:#333333;
+    --meta:#777777;
+    --link:#3b5998;
+    --btn:#eceef5;
+    --btn-line:#999999;
+    --note-bg:#fff9d7;
+    --note-line:#e2c822;
+    --maxw:960px;
+    --leftw:193px;
+  }
+  /* dark ("lights out") variant of the same palette */
+  body.dark{
+    --bar:#22314f;
+    --bar-d:#16203a;
+    --blue-m:#41547f;
+    --blue-l:#5b6f9e;
+    --wash:#232a3a;
+    --page:#15171c;
+    --box:#1d2027;
+    --line:#353b47;
+    --line-soft:#2a2f3a;
+    --text:#e2e5ea;
+    --meta:#98a0ad;
+    --link:#a8bcea;
+    --btn:#262b35;
+    --btn-line:#454c58;
+    --note-bg:#2e2a17;
+    --note-line:#6b5f22;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
+    font-size:13px;
+    line-height:1.46;
+    background:var(--page);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    transition:background .2s,color .2s;
+  }
+  a{color:var(--link);text-decoration:none}
+  a:hover{text-decoration:underline}
+  :focus-visible{outline:2px solid var(--bar);outline-offset:2px}
+  body.dark :focus-visible{outline-color:var(--link)}
+  img{max-width:100%}
+
+  .skiplink{
+    position:absolute;left:-9999px;top:0;z-index:100;
+    background:var(--box);color:var(--link);padding:8px 14px;border:1px solid var(--line)
+  }
+  .skiplink:focus{left:8px;top:8px}
+
+  /* ---------- BLUE BAR (site controls only) ---------- */
+  .fbbar{background:var(--bar);border-bottom:1px solid var(--bar-d);position:sticky;top:0;z-index:30}
+  .fbbar-in{
+    max-width:var(--maxw);margin:0 auto;padding:0 10px;height:36px;
+    display:flex;align-items:center;justify-content:flex-end;gap:6px
+  }
+  .lang{display:flex;border:1px solid var(--bar-d);border-radius:2px;overflow:hidden}
+  .lang button{
+    background:var(--blue-m);border:0;cursor:pointer;color:#fff;
+    font-family:inherit;font-size:11px;font-weight:bold;padding:4px 9px;letter-spacing:.4px
+  }
+  .lang button.on{background:#fff;color:var(--bar)}
+  .themebtn{
+    background:var(--blue-m);border:1px solid var(--bar-d);border-radius:2px;cursor:pointer;
+    width:26px;height:24px;display:flex;align-items:center;justify-content:center;color:#fff;padding:0
+  }
+  .themebtn:hover{background:var(--blue-l)}
+  .themebtn .moon{display:none}
+  body.dark .themebtn .sun{display:none}
+  body.dark .themebtn .moon{display:block}
+
+  /* ---------- COLUMNS ---------- */
+  .cols{
+    max-width:var(--maxw);margin:0 auto;padding:14px 10px 24px;
+    display:grid;grid-template-columns:var(--leftw) 1fr;gap:12px;align-items:start
+  }
+  .left{display:flex;flex-direction:column;gap:10px;position:sticky;top:48px}
+
+  /* ---------- NAME + TABS (right of the picture) ---------- */
+  .profhead{margin-bottom:9px}
+  h1{font-size:25px;font-weight:bold;letter-spacing:-.3px;line-height:1.1}
+  .tabs{display:flex;gap:1px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:12px}
+  .tab{
+    font-size:13px;font-weight:bold;color:#fff;background:var(--blue-m);
+    padding:6px 13px;border:1px solid transparent;border-bottom:0;
+    border-radius:3px 3px 0 0;text-decoration:none;position:relative;top:1px
+  }
+  .tab:hover{background:var(--blue-l);text-decoration:none;color:#fff}
+  .tab.active{
+    background:var(--box);color:var(--bar);
+    border-color:var(--line);border-bottom:1px solid var(--box)
+  }
+  body.dark .tab.active{color:var(--link)}
+
+  /* ---------- BOXES ---------- */
+  .box{background:var(--box);border:1px solid var(--line);margin-bottom:10px}
+  .box:last-child{margin-bottom:0}
+  .boxhead{
+    background:var(--wash);border-bottom:1px solid var(--line);
+    padding:5px 9px;font-size:12px;font-weight:bold;color:var(--bar)
+  }
+  body.dark .boxhead{color:var(--link)}
+  .boxbody{padding:12px}
+  .boxbody > p{margin-bottom:10px;color:var(--text)}
+  .boxbody > p:last-child{margin-bottom:0}
+  p.lead{font-size:14px;line-height:1.55}
+
+  h2{font-size:16px;font-weight:bold;margin-bottom:6px}
+  h3{font-size:13px;font-weight:bold;margin-bottom:4px}
+  .subhead{
+    font-size:12px;font-weight:bold;color:var(--bar);
+    border-bottom:1px solid var(--line-soft);padding-bottom:4px;margin:16px 0 8px
+  }
+  body.dark .subhead{color:var(--link)}
+  .subhead:first-child{margin-top:0}
+
+  /* picture box */
+  .picbox{background:var(--box);border:1px solid var(--line);padding:5px}
+  .picbox img{display:block;width:100%;height:auto}
+
+  /* info rows in the left column */
+  .inforow{display:flex;gap:6px;font-size:12px;padding:3px 0;border-bottom:1px solid var(--line-soft)}
+  .inforow:last-child{border-bottom:0}
+  .inforow .k{color:var(--meta);flex:0 0 62px}
+  .inforow .v{flex:1;min-width:0;word-break:break-word}
+  .linklist{list-style:none;font-size:12px}
+  .linklist li{padding:3px 0;border-bottom:1px solid var(--line-soft)}
+  .linklist li:last-child{border-bottom:0}
+
+  /* ---------- BUTTONS ---------- */
+  .btn{
+    display:inline-block;font-family:inherit;font-size:12px;font-weight:bold;
+    padding:3px 10px;border:1px solid var(--btn-line);border-radius:2px;
+    background:var(--btn);color:var(--text);cursor:pointer;text-decoration:none;line-height:1.6
+  }
+  .btn:hover{background:var(--wash);text-decoration:none}
+  .btn.primary{
+    background:#5b74a8;border-color:#29447e;border-bottom-color:#1a356e;color:#fff;
+    box-shadow:inset 0 1px 0 #8a9dc2
+  }
+  .btn.primary:hover{background:#4f689c}
+  body.dark .btn.primary{background:#3c5285;border-color:#1a2a4d;box-shadow:inset 0 1px 0 #5a6f9e}
+
+  /* ---------- UPDATES FEED (Home) ---------- */
+  .feed{list-style:none}
+  .feeditem{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--line-soft)}
+  .feeditem:last-child{border-bottom:0}
+  .fic{
+    flex:0 0 30px;height:30px;background:var(--wash);border:1px solid var(--blue-l);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--bar);font-weight:bold;font-size:14px
+  }
+  body.dark .fic{color:var(--link)}
+  .fbody{flex:1;min-width:0}
+  .ftxt{display:block}
+  .fmeta{display:block;font-size:11px;color:var(--meta);margin-top:2px}
+  .fempty{font-size:12px;color:var(--meta);font-style:italic}
+
+  /* ---------- PILLS ---------- */
+  .interests{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+  .pill{
+    display:inline-block;font-size:11px;background:var(--wash);color:var(--bar);
+    border:1px solid var(--blue-l);border-radius:2px;padding:2px 7px
+  }
+  body.dark .pill{color:var(--link)}
+
+  /* yellow notice, the classic FB alert strip */
+  .wip{
+    display:block;font-size:12px;color:var(--text);
+    background:var(--note-bg);border:1px solid var(--note-line);
+    padding:6px 9px;margin-bottom:10px
+  }
+
+  /* ---------- PUBLICATIONS ---------- */
+  .pub{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line-soft)}
+  .pub:last-child{border-bottom:0}
+  .pub .yr{flex:0 0 42px;font-size:12px;font-weight:bold;color:var(--meta);text-align:right;padding-top:1px}
+  .pub .body{flex:1;min-width:0}
+  .pub .ttl{display:block;font-size:13px;font-weight:bold;color:var(--text);margin-bottom:2px}
+  .pub .meta{display:block;font-size:12px;color:var(--meta);font-style:italic}
+  .pub .tag{
+    display:inline-block;font-style:normal;font-size:10px;font-weight:bold;letter-spacing:.4px;
+    background:var(--blue-m);color:#fff;border-radius:2px;padding:1px 5px;margin-left:6px;
+    vertical-align:1px;text-transform:uppercase
+  }
+  .pub .links{margin-top:5px;display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:12px}
+  .citebtn{font-family:inherit;font-size:12px;color:var(--link);background:none;border:0;cursor:pointer;padding:0}
+  .citebtn:hover{text-decoration:underline}
+  .sep{color:var(--line);font-size:11px}
+  .bibsrc{display:none}
+
+  /* ---------- COURSES ---------- */
+  details.course{border:1px solid var(--line);background:var(--box);margin-bottom:8px}
+  details.course:last-child{margin-bottom:0}
+  details.course summary{
+    list-style:none;cursor:pointer;padding:9px 11px;display:flex;gap:10px;align-items:flex-start;
+    background:var(--wash)
+  }
+  details.course summary::-webkit-details-marker{display:none}
+  details.course summary:hover{background:var(--blue-l)}
+  details.course summary:hover .code,
+  details.course summary:hover h3,
+  details.course summary:hover .inst{color:#fff}
+  .course .head2{flex:1;min-width:0}
+  .course .code{font-size:11px;font-weight:bold;color:var(--bar);letter-spacing:.6px}
+  body.dark .course .code{color:var(--link)}
+  .course h3{font-size:13px;margin:1px 0}
+  .course .inst{font-size:12px;color:var(--meta)}
+  .course .chev{
+    flex:0 0 auto;width:9px;height:9px;margin-top:5px;
+    border-right:2px solid var(--bar);border-bottom:2px solid var(--bar);
+    transform:rotate(45deg);transition:transform .2s
+  }
+  body.dark .course .chev{border-color:var(--link)}
+  details.course[open] .chev{transform:rotate(-135deg);margin-top:8px}
+  .matwrap{padding:12px}
+  .materials{list-style:none;margin:0}
+  .materials li{display:flex;gap:10px;padding:5px 0;border-bottom:1px solid var(--line-soft)}
+  .materials li:last-child{border-bottom:0}
+  .materials .wk{flex:0 0 52px;font-size:11px;font-weight:bold;color:var(--meta)}
+  .matnote{font-size:11px;color:var(--meta);font-style:italic;margin-top:10px}
+
+  /* ---------- PERSONAL ---------- */
+  .perstabs{display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--line);margin-bottom:12px}
+  .perstab{
+    font-family:inherit;font-size:12px;font-weight:bold;cursor:pointer;
+    background:none;border:1px solid transparent;border-bottom:0;
+    padding:6px 12px;color:var(--link);display:flex;align-items:center;gap:7px;position:relative;top:1px
+  }
+  .perstab:hover{background:var(--wash)}
+  .perstab.active{background:var(--box);border-color:var(--line);border-bottom:1px solid var(--box);color:var(--text)}
+  .perstab .ic{display:flex;color:var(--blue-m)}
+  .perstab.active .ic{color:var(--bar)}
+  body.dark .perstab.active .ic{color:var(--link)}
+  .perspanel{display:none}
+  .perspanel.show{display:block}
+  .cigarmap,.travelmap{height:320px;width:100%;border:1px solid var(--line);margin:10px 0 4px;z-index:0}
+  .leaflet-popup-content{font-family:"lucida grande",tahoma,verdana,arial,sans-serif;font-size:12px}
+  .mapnote{font-size:12px;color:var(--meta);font-style:italic}
+
+  .ratehead{display:flex;align-items:baseline;gap:8px;margin:16px 0 6px}
+  .ratehead h3{font-size:13px;color:var(--bar)}
+  body.dark .ratehead h3{color:var(--link)}
+  .ratehead .count{font-size:11px;color:var(--meta);font-style:italic}
+  .yeartag{font-size:11px;font-weight:bold;color:var(--meta);letter-spacing:.6px;background:var(--wash);padding:3px 8px;margin:12px 0 0}
+  .rateitem{display:flex;align-items:center;gap:14px;padding:9px 0;border-bottom:1px solid var(--line-soft)}
+  .rateitem:last-child{border-bottom:0}
+  .ri-main{flex:1;min-width:0}
+  .ri-title{display:block;font-size:13px;font-weight:bold}
+  .ri-meta{display:block;font-size:11px;color:var(--meta);font-style:italic}
+  .ri-note{display:block;font-size:12px;color:var(--meta);margin-top:2px}
+  .score{flex:0 0 104px;text-align:right}
+  .score-num{font-size:14px;font-weight:bold}
+  .score-num small{font-size:10px;color:var(--meta);font-weight:normal}
+  .bar{display:block;height:7px;background:var(--line-soft);margin-top:4px;border:1px solid var(--line);overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--bar)}
+  .bar.mid i{background:var(--blue-m)}
+  .bar.lo i{background:var(--blue-l)}
+
+  /* ---------- CONTACT ---------- */
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  .ckey{font-size:11px;font-weight:bold;color:var(--meta);text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px}
+
+  /* ---------- PAGES / FOOTER ---------- */
+  .page{display:none}
+  .page.show{display:block;animation:fade .18s ease both}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  footer{
+    max-width:var(--maxw);margin:0 auto;padding:14px 10px 28px;
+    border-top:1px solid var(--line);font-size:11px;color:var(--meta);text-align:center
+  }
+
+  /* language switching */
+  body:not(.tr) [data-tr]{display:none}
+  body.tr [data-en]{display:none}
+
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *{animation:none!important;transition:none!important}
+  }
+
+  @media(max-width:760px){
+    .cols{grid-template-columns:1fr;padding:10px}
+    .left{position:static;flex-direction:row;flex-wrap:wrap;gap:10px;align-items:flex-start}
+    .picbox{flex:0 0 120px}
+    .left .box{flex:1 1 200px;margin-bottom:0}
+    h1{font-size:22px}
+    .tabs{gap:2px}
+    .tab{padding:5px 10px;font-size:12px}
+    .contact-grid{grid-template-columns:1fr}
+    .pub{flex-direction:column;gap:2px}
+    .pub .yr{text-align:left}
+    .rateitem{flex-direction:column;align-items:flex-start;gap:5px}
+    .score{text-align:left;width:140px;flex:0 0 auto}
+  }
+
+  @media print{
+    .fbbar,.tabs,.themebtn,.lang,.cigarmap,.travelmap{display:none!important}
+    .page{display:block!important}
+    .perspanel{display:block!important}
+    .cols{display:block}
+    .box{border:0;page-break-inside:avoid}
+    body{background:#fff;font-size:11pt}
+  }
+</style>
+<noscript><style>
+  /* no JS: show everything rather than an empty page */
+  .page{display:block!important}
+  .perspanel{display:block!important}
+  .tabs,.perstabs,.lang,.themebtn,.citebtn,#feed-box{display:none!important}
+</style></noscript>
+</head>
+<body>
+
+<a class="skiplink" href="#content" data-en>Skip to content</a>
+<a class="skiplink" href="#content" data-tr>İçeriğe geç</a>
+
+<!-- ===================== BLUE BAR ===================== -->
+<div class="fbbar">
+  <div class="fbbar-in">
+    <div class="lang">
+      <button id="btn-en" class="on" onclick="setLang('en')" aria-label="English">EN</button>
+      <button id="btn-tr" onclick="setLang('tr')" aria-label="Türkçe">TR</button>
+    </div>
+    <button class="themebtn" onclick="toggleTheme()" aria-label="Toggle dark mode" title="Theme">
+      <svg class="sun" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </div>
+</div>
+
+<div class="cols">
+
+  <!-- ===================== LEFT COLUMN ===================== -->
+  <aside class="left">
+    <div class="picbox">
+      <img src="photo.jpg" alt="Şükrü Demirtaş" width="400" height="500" decoding="async">
+    </div>
+
+    <div class="box">
+      <div class="boxhead"><span data-en>Information</span><span data-tr>Bilgi</span></div>
+      <div class="boxbody" style="padding:9px">
+        <div class="inforow">
+          <span class="k" data-en>Institution</span><span class="k" data-tr>Kurum</span>
+          <span class="v" data-en>Yıldız Technical University</span>
+          <span class="v" data-tr>Yıldız Teknik Üniversitesi</span>
+        </div>
+        <div class="inforow">
+          <span class="k" data-en>Department</span><span class="k" data-tr>Bölüm</span>
+          <span class="v" data-en>Economics</span>
+          <span class="v" data-tr>İktisat</span>
+        </div>
+        <div class="inforow">
+          <span class="k" data-en>Location</span><span class="k" data-tr>Konum</span>
+          <span class="v">İstanbul</span>
+        </div>
+        <div class="inforow">
+          <span class="k" data-en>Email</span><span class="k" data-tr>E-posta</span>
+          <span class="v"><a href="mailto:sukru.demirtas@yildiz.edu.tr">sukru.demirtas@yildiz.edu.tr</a></span>
+        </div>
+        <div class="inforow">
+          <span class="k">CV</span>
+          <span class="v">
+            <a href="cv.pdf" download data-en>Download (PDF)</a>
+            <a href="cv.pdf" download data-tr>İndir (PDF)</a>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="boxhead"><span data-en>Profiles</span><span data-tr>Profiller</span></div>
+      <div class="boxbody" style="padding:9px">
+        <ul class="linklist">
+          <li><a href="https://scholar.google.com.tr/citations?user=6zjV69AAAAAJ" target="_blank" rel="noopener">Google Scholar</a></li>
+          <li><a href="https://orcid.org/0000-0002-6953-3599" target="_blank" rel="noopener">ORCID</a></li>
+          <li><a href="https://arxiv.org/abs/2503.03323" target="_blank" rel="noopener">arXiv</a></li>
+          <li><a href="https://tr.linkedin.com/in/demirtasukru" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===================== RIGHT COLUMN ===================== -->
+  <main class="right" id="content">
+
+    <div class="profhead">
+      <h1>Şükrü C. Demirtaş</h1>
+    </div>
+
+    <nav class="tabs" id="tabs" aria-label="Sections">
+      <a href="#home"     class="tab" data-en>Home</a>      <a href="#home"     class="tab" data-tr>Ana Sayfa</a>
+      <a href="#about"    class="tab" data-en>About</a>     <a href="#about"    class="tab" data-tr>Hakkımda</a>
+      <a href="#research" class="tab" data-en>Research</a>  <a href="#research" class="tab" data-tr>Araştırma</a>
+      <a href="#courses"  class="tab" data-en>Teaching</a>  <a href="#courses"  class="tab" data-tr>Dersler</a>
+      <a href="#personal" class="tab" data-en>Personal</a>  <a href="#personal" class="tab" data-tr>Kişisel</a>
+      <a href="#contact"  class="tab" data-en>Contact</a>   <a href="#contact"  class="tab" data-tr>İletişim</a>
+    </nav>
+
+  <!-- ---------- HOME / UPDATES FEED ---------- -->
+  <div id="home" class="page show">
+    <div class="box" id="feed-box">
+      <div class="boxhead"><span data-en>Recent updates</span><span data-tr>Son güncellemeler</span></div>
+      <div class="boxbody">
+        <ul class="feed" id="feed"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------- ABOUT ---------- -->
+  <div id="about" class="page">
+    <div class="box">
+      <div class="boxhead"><span data-en>About</span><span data-tr>Hakkımda</span></div>
+      <div class="boxbody">
+        <p class="lead" data-en>Computational social scientist working in economics and finance. I build agent-based models of financial markets and study how individual behavior shapes aggregate outcomes such as price dynamics, inflation, and central bank policy.</p>
+        <p class="lead" data-tr>Ekonomi ve finans alanında çalışan hesaplamalı sosyal bilimci. Finansal piyasaların etmen tabanlı modellerini kuruyor, bireysel davranışın fiyat dinamikleri, enflasyon ve merkez bankası politikası gibi toplam sonuçları nasıl şekillendirdiğini inceliyorum.</p>
+        <p data-en>My work sits between economics and computer science. I use agent-based modeling, time series econometrics, and simulation to ask how markets and economies behave when agents are heterogeneous and only boundedly rational.</p>
+        <p data-tr>Çalışmalarım iktisat ile bilgisayar bilimi arasında konumlanıyor. Etmen tabanlı modelleme, zaman serisi ekonometrisi ve simülasyon kullanarak, etmenler heterojen ve sınırlı rasyonel olduğunda piyasaların ve ekonomilerin nasıl davrandığını araştırıyorum.</p>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="boxhead"><span data-en>Research interests</span><span data-tr>Araştırma alanları</span></div>
+      <div class="boxbody">
+        <div class="interests">
+          <span class="pill" data-en>Economics</span><span class="pill" data-tr>Ekonomi</span>
+          <span class="pill" data-en>Finance</span><span class="pill" data-tr>Finans</span>
+          <span class="pill" data-en>Agent-Based Modeling</span><span class="pill" data-tr>Etmen Tabanlı Modelleme</span>
+          <span class="pill" data-en>Artificial Stock Markets</span><span class="pill" data-tr>Yapay Borsa Modelleri</span>
+          <span class="pill" data-en>Central Banking</span><span class="pill" data-tr>Merkez Bankacılığı</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="boxhead"><span data-en>Tools &amp; methods</span><span data-tr>Araçlar ve yöntemler</span></div>
+      <div class="boxbody">
+        <div class="interests">
+          <span class="pill">Python</span>
+          <span class="pill">NetLogo</span>
+          <span class="pill">E-Views</span>
+          <span class="pill">Oracle</span>
+          <span class="pill">LaTeX</span>
+          <span class="pill" data-en>Machine Learning</span><span class="pill" data-tr>Makine Öğrenmesi</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------- RESEARCH ---------- -->
+  <div id="research" class="page">
+    <div class="box">
+      <div class="boxhead"><span data-en>Research &amp; Publications</span><span data-tr>Araştırma ve Yayınlar</span></div>
+      <div class="boxbody">
+        <p data-en>Peer-reviewed journal articles, a preprint, and book chapters in economics, finance, agent-based modeling, and central banking. Use the BibTeX button to copy a citation.</p>
+        <p data-tr>Ekonomi, finans, etmen tabanlı modelleme ve merkez bankacılığı alanlarında hakemli dergi makaleleri, bir ön baskı ve kitap bölümleri. Künyeyi kopyalamak için BibTeX düğmesini kullanın.</p>
+
+        <div class="subhead" data-en>Journal articles &amp; preprints</div>
+        <div class="subhead" data-tr>Dergi makaleleri ve ön baskılar</div>
+
+        <div class="pub">
+          <div class="yr">2026</div>
+          <div class="body">
+            <span class="ttl">Demirtaş, Ş. C., &amp; Şahin, S. Ç. (2026). Agent-based modeling of inflation dynamics: Interactions between market structure, firm pricing, expectations, and central bank in Türkiye.<span class="tag">ESCI</span></span>
+            <span class="meta">Central Bank Review, 26(2), 100253.</span>
+            <div class="links">
+              <a href="#" target="_blank" rel="noopener">DOI</a><span class="sep">·</span>
+              <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
+              <code class="bibsrc">@article{demirtas2026inflation,
+  author  = {Demirtaş, Şükrü C. and Çakmak Şahin, Senem},
+  title   = {Agent-based modeling of inflation dynamics: Interactions between market structure, firm pricing, expectations, and central bank in Türkiye},
+  journal = {Central Bank Review},
+  volume  = {26},
+  number  = {2},
+  pages   = {100253},
+  year    = {2026}
+}</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="pub">
+          <div class="yr">2025</div>
+          <div class="body">
+            <span class="ttl">Çetin, U., Demirtaş, Ş. C., &amp; Şahin, S. Ç. (2025). Price dynamics in artificial stock market with realistic order book mechanism.<span class="tag">SSCI</span></span>
+            <span class="meta">The North American Journal of Economics and Finance, 102504.</span>
+            <div class="links">
+              <a href="#" target="_blank" rel="noopener">DOI</a><span class="sep">·</span>
+              <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
+              <code class="bibsrc">@article{cetin2025price,
+  author  = {Çetin, Uzay and Demirtaş, Şükrü C. and Çakmak Şahin, Senem},
+  title   = {Price dynamics in artificial stock market with realistic order book mechanism},
+  journal = {The North American Journal of Economics and Finance},
+  pages   = {102504},
+  year    = {2025}
+}</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="pub">
+          <div class="yr">2025</div>
+          <div class="body">
+            <span class="ttl">Demirtaş, S. C. (2025). Exchange rate sensitivity in free zone trade: An empirical study of the Istanbul Atatürk Airport Free Zone.<span class="tag">arXiv</span></span>
+            <span class="meta">arXiv preprint arXiv:2503.03323.</span>
+            <div class="links">
+              <a href="https://arxiv.org/abs/2503.03323" target="_blank" rel="noopener">arXiv</a><span class="sep">·</span>
+              <a href="https://arxiv.org/pdf/2503.03323" target="_blank" rel="noopener">PDF</a><span class="sep">·</span>
+              <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
+              <code class="bibsrc">@article{demirtas2025exchange,
+  author  = {Demirtaş, Şükrü C.},
+  title   = {Exchange rate sensitivity in free zone trade: An empirical study of the Istanbul Atatürk Airport Free Zone},
+  journal = {arXiv preprint arXiv:2503.03323},
+  year    = {2025}
+}</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="pub">
+          <div class="yr">2023</div>
+          <div class="body">
+            <span class="ttl">Demirtaş, Ş. C., &amp; Şahin, S. Ç. (2023). Ajan bazlı finansal modelleme ve uygulama prosedürü.</span>
+            <span class="meta">Politik Ekonomik Kuram, 7(2), 201-214.</span>
+            <div class="links">
+              <a href="#" target="_blank" rel="noopener">DergiPark</a><span class="sep">·</span>
+              <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
+              <code class="bibsrc">@article{demirtas2023ajan,
+  author  = {Demirtaş, Şükrü C. and Çakmak Şahin, Senem},
+  title   = {Ajan bazlı finansal modelleme ve uygulama prosedürü},
+  journal = {Politik Ekonomik Kuram},
+  volume  = {7},
+  number  = {2},
+  pages   = {201--214},
+  year    = {2023}
+}</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="pub">
+          <div class="yr">2022</div>
+          <div class="body">
+            <span class="ttl">Demirtaş, Ş. C., &amp; Şahin, S. Ç. (2022). Algorithmic trading versus human traders at different information levels.</span>
+            <span class="meta">Ulakbilge, 75, 825-835.</span>
+            <div class="links">
+              <a href="#" target="_blank" rel="noopener">DergiPark</a><span class="sep">·</span>
+              <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
+              <code class="bibsrc">@article{demirtas2022algorithmic,
+  author  = {Demirtaş, Şükrü C. and Çakmak Şahin, Senem},
+  title   = {Algorithmic trading versus human traders at different information levels},
+  journal = {Ulakbilge},
+  volume  = {75},
+  pages   = {825--835},
+  year    = {2022}
+}</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="pub">
+          <div class="yr">2017</div>
+          <div class="body">
+            <span class="ttl">Öncel, A., &amp; Demirtaş, Ş. C. (2017). Serbest bölgelerin dış ticarete etkileri: Türkiye üzerine ARDL modeli ile ampirik bir uygulama.</span>
+            <span class="meta">Eskişehir Osmangazi Üniversitesi İİBF Dergisi, 12(1), 65-82.</span>
+            <div class="links">
+              <a href="#" target="_blank" rel="noopener">DergiPark</a><span class="sep">·</span>
+              <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
+              <code class="bibsrc">@article{oncel2017serbest,
+  author  = {Öncel, Abidin and Demirtaş, Şükrü C.},
+  title   = {Serbest bölgelerin dış ticarete etkileri: Türkiye üzerine ARDL modeli ile ampirik bir uygulama},
+  journal = {Eskişehir Osmangazi Üniversitesi İİBF Dergisi},
+  volume  = {12},
+  number  = {1},
+  pages   = {65--82},
+  year    = {2017}
+}</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="subhead" data-en>Book chapters</div>
+        <div class="subhead" data-tr>Kitap bölümleri</div>
+
+        <div class="pub">
+          <div class="yr">2026</div>
+          <div class="body">
+            <span class="ttl">Demirtaş, Ş. C., &amp; Çakmak Şahin, S. (2026). The digital platform&#x2019;s influence on work and social inequality: gender, migration, and labor markets.</span>
+            <span class="meta" data-en>In Regulating the Gig Economy in the European Union: Challenges, Innovations, and Global Impacts. IGI Global.</span>
+            <span class="meta" data-tr>Regulating the Gig Economy in the European Union: Challenges, Innovations, and Global Impacts içinde. IGI Global.</span>
+            <div class="links">
+              <a href="#" target="_blank" rel="noopener" data-en>Publisher</a>
+              <a href="#" target="_blank" rel="noopener" data-tr>Yayıncı</a><span class="sep">·</span>
+              <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
+              <code class="bibsrc">@incollection{demirtas2026digital,
+  author    = {Demirtaş, Şükrü C. and Çakmak Şahin, Senem},
+  title     = {The digital platform's influence on work and social inequality: gender, migration, and labor markets},
+  booktitle = {Regulating the Gig Economy in the European Union: Challenges, Innovations, and Global Impacts},
+  publisher = {IGI Global},
+  year      = {2026}
+}</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="pub">
+          <div class="yr">2025</div>
+          <div class="body">
+            <span class="ttl">Demirtaş, Ş. C., &amp; Çakmak Şahin, S. (2025). The role and impact of regional climate cooperation in the EU in the green transition.</span>
+            <span class="meta" data-en>In Cross-Border Cooperation in the Age of Climate Change. IGI Global.</span>
+            <span class="meta" data-tr>Cross-Border Cooperation in the Age of Climate Change içinde. IGI Global.</span>
+            <div class="links">
+              <a href="#" target="_blank" rel="noopener" data-en>Publisher</a>
+              <a href="#" target="_blank" rel="noopener" data-tr>Yayıncı</a><span class="sep">·</span>
+              <button class="citebtn" onclick="copyBib(this)">BibTeX</button>
+              <code class="bibsrc">@incollection{demirtas2025climate,
+  author    = {Demirtaş, Şükrü C. and Çakmak Şahin, Senem},
+  title     = {The role and impact of regional climate cooperation in the EU in the green transition},
+  booktitle = {Cross-Border Cooperation in the Age of Climate Change},
+  publisher = {IGI Global},
+  year      = {2025}
+}</code>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------- TEACHING ---------- -->
+  <div id="courses" class="page">
+    <div class="box">
+      <div class="boxhead"><span data-en>Courses</span><span data-tr>Verdiğim Dersler</span></div>
+      <div class="boxbody">
+        <p data-en>Lecture slides, notebooks, and assignments for each course are available for download below.</p>
+        <p data-tr>Her dersin sunumları, defterleri ve ödevleri aşağıdan indirilebilir.</p>
+
+        <div style="margin-top:12px">
+          <details class="course">
+            <summary>
+              <div class="head2">
+                <div class="code">IKT1170</div>
+                <h3 data-en>Introduction to Computer Science</h3>
+                <h3 data-tr>Temel Bilgisayar Bilimleri</h3>
+                <div class="inst" data-en>Yıldız Technical University — undergraduate, Spring 2025-2026. Python programming with economics and finance applications.</div>
+                <div class="inst" data-tr>Yıldız Teknik Üniversitesi — lisans, 2025-2026 Bahar. İktisat ve finans uygulamalarıyla Python programlama.</div>
+              </div>
+              <span class="chev" aria-hidden="true"></span>
+            </summary>
+            <div class="matwrap">
+              <span class="wip" data-en>Under construction. Materials will be updated soon.</span>
+              <span class="wip" data-tr>Yapım aşamasında. Materyaller yakında güncellenecek.</span>
+              <ul class="materials">
+              </ul>
+              <p class="matnote" data-en>Notes are shared after the corresponding session.</p>
+              <p class="matnote" data-tr>Notlar ilgili ders işlendikten sonra paylaşılır.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------- PERSONAL ---------- -->
+  <div id="personal" class="page">
+    <div class="box">
+      <div class="boxhead"><span data-en>Personal</span><span data-tr>Kişisel</span></div>
+      <div class="boxbody">
+        <p data-en>A running log of things I enjoy away from work. Scores are my own, out of 100, and entirely subjective.</p>
+        <p data-tr>İş dışında keşfettiğim şeylerin küçük bir günlüğü. Puanlar tamamen bana ait, 100 üzerinden ve özneldir.</p>
+
+        <div class="perstabs">
+          <button class="perstab" id="tab-cigars" onclick="showPers('cigars')">
+            <span class="ic"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="9" width="16" height="6" rx="3"/><path d="M18 12h4"/></svg></span>
+            <span data-en>Cigars</span><span data-tr>Purolar</span>
+          </button>
+          <button class="perstab" id="tab-books" onclick="showPers('books')">
+            <span class="ic"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z"/><path d="M18 3v16"/></svg></span>
+            <span data-en>Reading</span><span data-tr>Okuduklarım</span>
+          </button>
+          <button class="perstab" id="tab-travels" onclick="showPers('travels')">
+            <span class="ic"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5 8 12 8 12s8-7 8-12a8 8 0 0 0-8-8z"/></svg></span>
+            <span data-en>Travels</span><span data-tr>Seyahatler</span>
+          </button>
+          <button class="perstab" id="tab-coffee" onclick="showPers('coffee')">
+            <span class="ic"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 10h2a2 2 0 0 1 0 4h-2"/><path d="M8 2c-.5 1 .5 2 0 3M12 2c-.5 1 .5 2 0 3"/></svg></span>
+            <span data-en>Coffee</span><span data-tr>Kahve</span>
+          </button>
+        </div>
+
+        <!-- ---- CIGARS PANEL ---- -->
+        <div class="perspanel" id="panel-cigars">
+          <span class="wip" data-en>Under construction. To be updated.</span>
+          <span class="wip" data-tr>Yapım aşamasında. Güncellenecek.</span>
+          <p class="mapnote" data-en>Lounges and spots where I have enjoyed a good cigar.</p>
+          <p class="mapnote" data-tr>İyi bir puro içtiğim mekanlar ve duraklar.</p>
+          <div id="cigarmap" class="cigarmap"></div>
+
+          <div class="ratehead">
+            <h3 data-en>Tasting notes</h3>
+            <h3 data-tr>Tadım notları</h3>
+            <span class="count" data-en>rated out of 100</span>
+            <span class="count" data-tr>100 üzerinden</span>
+          </div>
+
+          <div class="rateitem">
+            <div class="ri-main">
+              <span class="ri-title">Cohiba Behike 52</span>
+              <span class="ri-meta" data-en>Cuba · 2024</span>
+              <span class="ri-meta" data-tr>Küba · 2024</span>
+              <span class="ri-note" data-en>Rich and creamy, long finish. A benchmark.</span>
+              <span class="ri-note" data-tr>Zengin ve kremamsı, uzun bitiş. Bir referans noktası.</span>
+            </div>
+            <div class="score">
+              <span class="score-num">95<small>/100</small></span>
+              <span class="bar hi"><i style="width:95%"></i></span>
+            </div>
+          </div>
+
+          <div class="rateitem">
+            <div class="ri-main">
+              <span class="ri-title">Padrón 1964 Anniversary</span>
+              <span class="ri-meta" data-en>Nicaragua · 2024</span>
+              <span class="ri-meta" data-tr>Nikaragua · 2024</span>
+              <span class="ri-note" data-en>Cocoa and coffee, very balanced.</span>
+              <span class="ri-note" data-tr>Kakao ve kahve, çok dengeli.</span>
+            </div>
+            <div class="score">
+              <span class="score-num">92<small>/100</small></span>
+              <span class="bar hi"><i style="width:92%"></i></span>
+            </div>
+          </div>
+
+          <div class="rateitem">
+            <div class="ri-main">
+              <span class="ri-title">Montecristo No. 2</span>
+              <span class="ri-meta" data-en>Cuba · 2023</span>
+              <span class="ri-meta" data-tr>Küba · 2023</span>
+              <span class="ri-note" data-en>Classic torpedo, dependable.</span>
+              <span class="ri-note" data-tr>Klasik torpedo, her zaman güvenilir.</span>
+            </div>
+            <div class="score">
+              <span class="score-num">88<small>/100</small></span>
+              <span class="bar mid"><i style="width:88%"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---- BOOKS PANEL ---- -->
+        <div class="perspanel" id="panel-books">
+          <span class="wip" data-en>Under construction. To be updated.</span>
+          <span class="wip" data-tr>Yapım aşamasında. Güncellenecek.</span>
+          <div class="ratehead">
+            <h3 data-en>Reading</h3>
+            <h3 data-tr>Okuduklarım</h3>
+            <span class="count" data-en>by year read</span>
+            <span class="count" data-tr>okuma yılına göre</span>
+          </div>
+
+          <div class="yeartag">2025</div>
+
+          <div class="rateitem">
+            <div class="ri-main">
+              <span class="ri-title">Title of the book</span>
+              <span class="ri-meta" data-en>Author name</span>
+              <span class="ri-meta" data-tr>Yazar adı</span>
+            </div>
+            <div class="score">
+              <span class="score-num">90<small>/100</small></span>
+              <span class="bar hi"><i style="width:90%"></i></span>
+            </div>
+          </div>
+
+          <div class="rateitem">
+            <div class="ri-main">
+              <span class="ri-title">Kitap adı</span>
+              <span class="ri-meta" data-en>Author name</span>
+              <span class="ri-meta" data-tr>Yazar adı</span>
+            </div>
+            <div class="score">
+              <span class="score-num">84<small>/100</small></span>
+              <span class="bar mid"><i style="width:84%"></i></span>
+            </div>
+          </div>
+
+          <div class="yeartag">2024</div>
+
+          <div class="rateitem">
+            <div class="ri-main">
+              <span class="ri-title">Another title</span>
+              <span class="ri-meta" data-en>Author name</span>
+              <span class="ri-meta" data-tr>Yazar adı</span>
+            </div>
+            <div class="score">
+              <span class="score-num">76<small>/100</small></span>
+              <span class="bar lo"><i style="width:76%"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---- TRAVELS PANEL ---- -->
+        <div class="perspanel" id="panel-travels">
+          <span class="wip" data-en>Under construction. To be updated.</span>
+          <span class="wip" data-tr>Yapım aşamasında. Güncellenecek.</span>
+          <p class="mapnote" data-en>Places I have travelled, for work and for pleasure.</p>
+          <p class="mapnote" data-tr>İş ve keyif için gezdiğim yerler.</p>
+          <div id="travelmap" class="travelmap"></div>
+
+          <div class="ratehead">
+            <h3 data-en>Trips</h3>
+            <h3 data-tr>Geziler</h3>
+            <span class="count" data-en>by year</span>
+            <span class="count" data-tr>yıllara göre</span>
+          </div>
+
+          <div class="yeartag">2025</div>
+<!-- Trip entries are placeholders; uncomment and edit when ready.
+          <div class="rateitem">
+            <div class="ri-main">
+              <span class="ri-title" data-en>Rome, Italy</span>
+              <span class="ri-title" data-tr>Roma, İtalya</span>
+              <span class="ri-note" data-en>Conference and a few extra days. Add your note.</span>
+              <span class="ri-note" data-tr>Konferans ve birkaç ekstra gün. Notunuzu ekleyin.</span>
+            </div>
+          </div>
+
+          <div class="yeartag">2024</div>
+
+          <div class="rateitem">
+            <div class="ri-main">
+              <span class="ri-title" data-en>Vienna, Austria</span>
+              <span class="ri-title" data-tr>Viyana, Avusturya</span>
+              <span class="ri-note" data-en>Add your note.</span>
+              <span class="ri-note" data-tr>Notunuzu ekleyin.</span>
+            </div>
+          </div>
+
+          <div class="rateitem">
+            <div class="ri-main">
+              <span class="ri-title" data-en>Barcelona, Spain</span>
+              <span class="ri-title" data-tr>Barselona, İspanya</span>
+              <span class="ri-note" data-en>Add your note.</span>
+              <span class="ri-note" data-tr>Notunuzu ekleyin.</span>
+            </div>
+          </div>
+-->
+        </div>
+
+        <!-- ---- COFFEE PANEL ---- -->
+        <div class="perspanel" id="panel-coffee">
+          <span class="wip" data-en>Under construction. To be updated.</span>
+          <span class="wip" data-tr>Yapım aşamasında. Güncellenecek.</span>
+          <div class="ratehead">
+            <h3 data-en>Beans and brews</h3>
+            <h3 data-tr>Çekirdekler ve demlemeler</h3>
+            <span class="count" data-en>what I am drinking</span>
+            <span class="count" data-tr>içtiklerim</span>
+          </div>
+
+          <div class="rateitem">
+            <div class="ri-main">
+              <span class="ri-title">Ethiopia Yirgacheffe</span>
+              <span class="ri-meta" data-en>Pour-over · single origin</span>
+              <span class="ri-meta" data-tr>Pour-over · tek menşe</span>
+              <span class="ri-note" data-en>Floral and bright, citrus notes. Add your note.</span>
+              <span class="ri-note" data-tr>Çiçeksi ve canlı, narenciye notaları. Notunuzu ekleyin.</span>
+            </div>
+          </div>
+
+          <div class="rateitem">
+            <div class="ri-main">
+              <span class="ri-title">Colombia Supremo</span>
+              <span class="ri-meta" data-en>Moka pot · medium roast</span>
+              <span class="ri-meta" data-tr>Moka pot · orta kavrum</span>
+              <span class="ri-note" data-en>Balanced, caramel sweetness. Add your note.</span>
+              <span class="ri-note" data-tr>Dengeli, karamel tatlılığı. Notunuzu ekleyin.</span>
+            </div>
+          </div>
+
+          <div class="rateitem">
+            <div class="ri-main">
+              <span class="ri-title" data-en>Turkish coffee, home roast</span>
+              <span class="ri-title" data-tr>Türk kahvesi, ev kavrumu</span>
+              <span class="ri-meta" data-en>Cezve · fine grind</span>
+              <span class="ri-meta" data-tr>Cezve · ince çekim</span>
+              <span class="ri-note" data-en>Add your note.</span>
+              <span class="ri-note" data-tr>Notunuzu ekleyin.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------- CONTACT ---------- -->
+  <div id="contact" class="page">
+    <div class="box">
+      <div class="boxhead"><span data-en>Get in touch</span><span data-tr>İletişim</span></div>
+      <div class="boxbody">
+        <p class="lead" data-en>For collaboration, supervision, or speaking, the best way to reach me is by email.</p>
+        <p class="lead" data-tr>İşbirliği, danışmanlık veya konuşma davetleri için bana ulaşmanın en iyi yolu e-postadır.</p>
+
+        <div class="contact-grid">
+          <div class="box" style="margin:0">
+            <div class="boxbody" style="padding:9px">
+              <div class="ckey" data-en>Office</div><div class="ckey" data-tr>Ofis</div>
+              <span data-en>Dept. of Economics, Yıldız Technical University, İstanbul</span>
+              <span data-tr>İktisat Bölümü, Yıldız Teknik Üniversitesi, İstanbul</span>
+            </div>
+          </div>
+          <div class="box" style="margin:0">
+            <div class="boxbody" style="padding:9px">
+              <div class="ckey" data-en>Working with students</div><div class="ckey" data-tr>Öğrencilerle çalışma</div>
+              <span data-en>I welcome motivated students interested in computational social science and ABM.</span>
+              <span data-tr>Hesaplamalı sosyal bilimler ve ajan bazlı modellemeye ilgi duyan istekli öğrencileri memnuniyetle karşılarım.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </main>
+</div>
+
+<footer>
+  <span data-en>© <span id="yr"></span> Şükrü Demirtaş</span>
+  <span data-tr>© <span id="yr2"></span> Şükrü Demirtaş</span>
+</footer>
+
+<script>
+  /* =========================================================
+     ANA SAYFA — GÜNCELLEME AKIŞI
+     Bir sekmede değişiklik yaptığında buraya bir satır ekle.
+     Liste tarihe göre kendiliğinden sıralanır (yeniden eskiye).
+
+       date : 'YYYY-AA-GG'
+       sec  : 'about' | 'research' | 'courses' | 'personal' | 'contact' | 'site'
+              ('site' bağlantı vermez, sadece not düşer)
+       tr   : Türkçe metin
+       en   : İngilizce metin
+
+     Aşağıdaki üç kayıt örnektir; kendine göre değiştir.
+     ========================================================= */
+  const UPDATES = [
+    {date:'2026-08-07', sec:'site',
+     tr:'Site yeni tasarıma geçti.',
+     en:'The site moved to a new design.'},
+    {date:'2026-08-07', sec:'research',
+     tr:'Yayın listesi güncellendi.',
+     en:'The publication list was updated.'},
+    {date:'2026-08-07', sec:'courses',
+     tr:'IKT1170 ders sayfası açıldı, materyaller yakında eklenecek.',
+     en:'The IKT1170 course page is up; materials will follow.'}
+  ];
+
+  let curLang = 'en';
+
+  const TITLES = {
+    en:{home:'Home', about:'About', research:'Research', courses:'Teaching', personal:'Personal', contact:'Contact', site:'Site'},
+    tr:{home:'Ana Sayfa', about:'Hakkımda', research:'Araştırma', courses:'Dersler', personal:'Kişisel', contact:'İletişim', site:'Site'}
+  };
+
+  /* ---- theme ---- */
+  function applyTheme(t){
+    document.body.classList.toggle('dark', t==='dark');
+    const m = document.querySelector('meta[name="theme-color"]');
+    if(m) m.setAttribute('content', t==='dark' ? '#22314f' : '#3b5998');
+  }
+  function toggleTheme(){
+    const next = document.body.classList.contains('dark') ? 'light' : 'dark';
+    applyTheme(next);
+    try{ localStorage.setItem('theme', next); }catch(e){}
+  }
+
+  /* ---- updates feed ---- */
+  function fmtDate(iso){
+    const d = new Date(iso + 'T00:00:00');
+    if(isNaN(d)) return iso;
+    return new Intl.DateTimeFormat(curLang==='tr' ? 'tr-TR' : 'en-US',
+      {day:'numeric', month:'long', year:'numeric'}).format(d);
+  }
+  function renderFeed(){
+    const list = document.getElementById('feed');
+    if(!list) return;
+    list.textContent = '';
+    const items = UPDATES.slice().sort((a,b)=> b.date.localeCompare(a.date));
+    if(!items.length){
+      const li = document.createElement('li');
+      li.className = 'fempty';
+      li.textContent = curLang==='tr' ? 'Henüz güncelleme yok.' : 'No updates yet.';
+      list.appendChild(li);
+      return;
+    }
+    const names = TITLES[curLang] || TITLES.en;
+    items.forEach(u=>{
+      const label = names[u.sec] || u.sec;
+      const li = document.createElement('li');
+      li.className = 'feeditem';
+
+      const ic = document.createElement('span');
+      ic.className = 'fic';
+      ic.setAttribute('aria-hidden','true');
+      ic.textContent = label.charAt(0).toLocaleUpperCase(curLang==='tr' ? 'tr-TR' : 'en-US');
+
+      const body = document.createElement('div');
+      body.className = 'fbody';
+
+      const txt = document.createElement('span');
+      txt.className = 'ftxt';
+      txt.textContent = (curLang==='tr' ? u.tr : u.en) || u.tr || u.en || '';
+
+      const meta = document.createElement('span');
+      meta.className = 'fmeta';
+      meta.appendChild(document.createTextNode(fmtDate(u.date) + ' · '));
+      if(u.sec && u.sec !== 'site'){
+        const a = document.createElement('a');
+        a.href = '#' + u.sec;
+        a.textContent = label;
+        meta.appendChild(a);
+      }else{
+        meta.appendChild(document.createTextNode(label));
+      }
+
+      body.appendChild(txt); body.appendChild(meta);
+      li.appendChild(ic); li.appendChild(body);
+      list.appendChild(li);
+    });
+  }
+
+  /* ---- copy BibTeX ---- */
+  function copyBib(btn){
+    const src = btn.parentElement.querySelector('.bibsrc');
+    if(!src) return;
+    const text = src.textContent;
+    const done = ()=>{
+      const old = btn.textContent;
+      btn.textContent = (curLang==='tr' ? 'Kopyalandı' : 'Copied');
+      setTimeout(()=>{ btn.textContent = old; }, 1400);
+    };
+    try{
+      navigator.clipboard.writeText(text).then(done).catch(()=>fallbackCopy(text, done));
+    }catch(e){ fallbackCopy(text, done); }
+  }
+  function fallbackCopy(text, done){
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); done(); }catch(e){}
+    document.body.removeChild(ta);
+  }
+
+  /* ---- language ---- */
+  function setLang(l){
+    curLang = l;
+    document.body.classList.toggle('tr', l==='tr');
+    document.documentElement.lang = l;
+    document.getElementById('btn-en').classList.toggle('on', l==='en');
+    document.getElementById('btn-tr').classList.toggle('on', l==='tr');
+    // carry the language onto links that lead to other pages (course pages)
+    document.querySelectorAll('a[href$=".html"], a[href*=".html?"]').forEach(a=>{
+      const base = a.getAttribute('href').split('?')[0];
+      a.setAttribute('href', l==='tr' ? base+'?lang=tr' : base);
+    });
+    try{ localStorage.setItem('lang', l); }catch(e){}
+    renderFeed();
+    setTitle();
+  }
+
+  /* ---- personal sub-tabs + maps ---- */
+  let cigarMap = null;
+  function initCigarMap(){
+    if(cigarMap || typeof L === 'undefined') return;
+    cigarMap = L.map('cigarmap', {scrollWheelZoom:false}).setView([41.039, 28.986], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom:19,
+      attribution:'&copy; OpenStreetMap'
+    }).addTo(cigarMap);
+    // Edit these spots: name, coordinates, note
+    const spots = [
+      {n:'Cigar lounge (edit)',  lat:41.0369, lng:28.9850, d:'Add your note here'},
+      {n:'Favourite spot (edit)',lat:41.0255, lng:28.9740, d:'Add your note here'},
+      {n:'Travel find (edit)',   lat:41.0082, lng:28.9784, d:'Add your note here'}
+    ];
+    spots.forEach(s=>{
+      L.marker([s.lat, s.lng]).addTo(cigarMap).bindPopup('<b>'+s.n+'</b><br>'+s.d);
+    });
+  }
+  let travelMap = null;
+  function initTravelMap(){
+    if(travelMap || typeof L === 'undefined') return;
+    travelMap = L.map('travelmap', {scrollWheelZoom:false}).setView([45, 15], 4);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom:19,
+      attribution:'&copy; OpenStreetMap'
+    }).addTo(travelMap);
+    // Edit these places: name, coordinates, year
+    const places = [
+      {n:'Istanbul', lat:41.0082, lng:28.9784, y:'home'},
+      {n:'Rome',     lat:41.9028, lng:12.4964, y:'2025'},
+      {n:'Vienna',   lat:48.2082, lng:16.3738, y:'2024'},
+      {n:'Barcelona',lat:41.3874, lng:2.1686,  y:'2024'}
+    ];
+    places.forEach(p=>{
+      L.marker([p.lat, p.lng]).addTo(travelMap).bindPopup('<b>'+p.n+'</b><br>'+p.y);
+    });
+  }
+  function refreshMaps(){
+    setTimeout(()=>{
+      if(cigarMap) cigarMap.invalidateSize();
+      if(travelMap) travelMap.invalidateSize();
+    }, 60);
+  }
+  let curPers = 'cigars';
+  function showPers(which){
+    curPers = which;
+    ['cigars','books','travels','coffee'].forEach(k=>{
+      document.getElementById('panel-'+k).classList.toggle('show', k===which);
+      const t = document.getElementById('tab-'+k);
+      t.classList.toggle('active', k===which);
+      t.setAttribute('aria-pressed', k===which ? 'true' : 'false');
+    });
+    if(which==='cigars') initCigarMap();
+    if(which==='travels') initTravelMap();
+    refreshMaps();
+  }
+
+  /* ---- hash router ---- */
+  const pages = ['home','about','research','courses','personal','contact'];
+  let curPage = 'home';
+  function setTitle(){
+    const label = (TITLES[curLang] || TITLES.en)[curPage];
+    document.title = curPage==='home' ? 'Şükrü Demirtaş' : 'Şükrü Demirtaş · ' + label;
+  }
+  function route(){
+    let id = location.hash.replace('#','') || 'home';
+    if(!pages.includes(id)) id = 'home';
+    curPage = id;
+    pages.forEach(p=>{
+      document.getElementById(p).classList.toggle('show', p===id);
+    });
+    document.querySelectorAll('.tabs .tab').forEach(a=>{
+      const on = a.getAttribute('href')==='#'+id;
+      a.classList.toggle('active', on);
+      if(on){ a.setAttribute('aria-current','page'); } else { a.removeAttribute('aria-current'); }
+    });
+    window.scrollTo({top:0,behavior:'instant'});
+    if(id==='personal') refreshMaps();
+    setTitle();
+  }
+  window.addEventListener('hashchange', route);
+  window.addEventListener('resize', refreshMaps);
+  // Leaflet loads with defer; draw the map once it is really there
+  window.addEventListener('load', ()=>{ if(curPage==='personal') showPers(curPers); });
+
+  /* ---- init ---- */
+  const y = new Date().getFullYear();
+  document.getElementById('yr').textContent = y;
+  document.getElementById('yr2').textContent = y;
+
+  let startLang = new URLSearchParams(location.search).get('lang');
+  if(startLang !== 'tr' && startLang !== 'en'){
+    try{ startLang = localStorage.getItem('lang'); }catch(e){ startLang = null; }
+  }
+  setLang(startLang==='tr' ? 'tr' : 'en');
+
+  let startTheme = 'light';
+  try{ startTheme = localStorage.getItem('theme') || 'light'; }catch(e){}
+  applyTheme(startTheme);
+
+  showPers('cigars');
+  route();
+</script>
+
+<!--
+  PRIVACY-FRIENDLY ANALYTICS (optional, off by default)
+  GoatCounter is free for personal sites and needs no cookie banner.
+  1. Sign up at https://www.goatcounter.com and pick a code (e.g. "demirtas").
+  2. Uncomment the line below and replace MYCODE with your code.
+  3. Plausible is an alternative if you prefer; its snippet goes here too.
+-->
+<!-- <script data-goatcounter="https://MYCODE.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script> -->
+
+</body>
+</html>
